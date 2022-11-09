@@ -1,0 +1,18 @@
+<div class="card mb-4" (click)="viewDetails(issue)">
+  <div class="card-body">
+    <h4 class="card-title">{{ issue.title }}</h4>
+    <div class="d-flex gap-3">
+      <p>Status: <span class="badge rounded-pill bg-info">Open</span></p>
+      <p>
+        Priority:
+        <span
+          class="badge rounded-pill"
+          [ngClass]="setPriorityClass(issue.priority)"
+          >{{ issue.priority | titlecase }}</span
+        >
+      </p>
+    </div>
+    <p class="card-text">{{ issue.description }}</p>
+  </div>
+  <div class="card-footer">{{ issue.createdOn | dateDiff }}</div>
+</div>

@@ -1,0 +1,134 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="input-group mb-3 mx-auto">
+    <h3 class="mx-auto">User Registration Form</h3>
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="firstName" class="form-label" required>First Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      formControlName="firstName"
+    />
+  </div>
+  <div
+    *ngIf="fm('firstName').touched && fm('firstName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('firstName').hasError('required')">
+      First name is required.
+    </div>
+    <div *ngIf="fm('firstName').hasError('maxlength')">
+      First name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="fm('firstName').hasError('pattern')">
+      First name must contain only alphabetic characters.
+    </div>
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="lastName" class="form-label" required>Last Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      formControlName="lastName"
+    />
+    <label for="email" class="form-label" required>Email:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      formControlName="email"
+    />
+  </div>
+  <div
+    *ngIf="fm('lastName').touched && fm('lastName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('lastName').hasError('required')">
+      Last name is required.
+    </div>
+    <div *ngIf="fm('lastName').hasError('maxlength')">
+      Last name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="fm('lastName').hasError('pattern')">
+      Last name must contain only alphabetic characters.
+    </div>
+  </div>
+  <div
+    *ngIf="fm('email').touched && fm('email').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('email').hasError('email')">Must be a valid email.</div>
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="userName" class="form-label" required>Username:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="userName"
+      formControlName="userName"
+    />
+  </div>
+  <div
+    *ngIf="fm('userName').touched && fm('userName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('userName').hasError('required')">Username is required.</div>
+    <div *ngIf="fm('userName').hasError('minlength')">
+      Username minimum length is {{ minLength }}.
+    </div>
+    <div *ngIf="fm('userName').hasError('pattern')">
+      Username must contain only alphanumeric characters.
+    </div>
+  </div>
+  <div class="w-50 mb-3 mx-auto">
+    <label for="password" class="form-label" required>Password:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="password"
+      formControlName="password"
+    />
+  </div>
+  <div
+    *ngIf="fm('password').touched && fm('password').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('password').hasError('required')">Password is required.</div>
+  </div>
+  <div class="w-50 mb-3 mx-auto">
+    <label for="passwordConf" class="form-label" required
+      >Confirm Password:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="passwordConf"
+      formControlName="passwordConf"
+    />
+  </div>
+  <div
+    div
+    *ngIf="registerForm.hasError('mismatch')"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    Passwords don't match.
+  </div>
+  <div class="input-group mb-3">
+    <button
+      type="submit"
+      class="btn btn-primary w-50 mx-auto"
+      [disabled]="!registerForm.valid"
+    >
+      Register
+    </button>
+  </div>
+</form>

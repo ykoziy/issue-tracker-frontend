@@ -1,0 +1,18 @@
+<div class="card mb-4">
+  <div class="card-header">
+    <div class="d-flex gap-1">
+      <div>
+        {{ comment.userName }}
+      </div>
+      <div>{{ "&bull;" }}</div>
+      <div>{{ comment.addedOn | dateDiff }}</div>
+      <div *ngIf="comment.updatedOn">{{ "&bull;" }}</div>
+      <div *ngIf="comment.updatedOn">
+        {{ "Edited: " }}{{ comment.updatedOn | dateDiff }}
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="card-text">{{ comment.content }}</p>
+  </div>
+</div>
