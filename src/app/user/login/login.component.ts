@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.loginService.authenticate(this.credentials, () => {
       console.log('aaaaa I got in');
-      console.log(this.loginService.authenticated);
+      console.log(this.loginService.getToken());
     });
     return false;
   }

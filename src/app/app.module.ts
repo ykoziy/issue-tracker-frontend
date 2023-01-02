@@ -7,7 +7,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './user/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from './service/login.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IssueService } from './service/issue.service';
 import { NewIssueComponent } from './issues/new-issue/new-issue.component';
 import { ProfileComponent } from './user/profile/profile.component';
@@ -20,6 +20,7 @@ import { IssueComponent } from './issues/issue/issue.component';
 import { CommentListComponent } from './comments/comment-list/comment-list.component';
 import { RegisterComponent } from './user/register/register.component';
 import { RegistrationService } from './service/registration.service';
+import { AuthInterceptorService } from './service/authInterceptor.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,17 @@ import { RegistrationService } from './service/registration.service';
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [LoginService, IssueService, CommentService, RegistrationService],
+  providers: [
+    LoginService,
+    IssueService,
+    CommentService,
+    RegistrationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

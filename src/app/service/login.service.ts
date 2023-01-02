@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class LoginService {
-  authenticated = false;
+  private authenticated: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -11,12 +11,16 @@ export class LoginService {
     credentials: { username: string; password: string },
     callback: { (): void; (): any }
   ) {
+    const token = window.btoa(
+      credentials.username + ':' + credentials.password
+    );
+
+    sessionStorage.setItem('authToken', token);
+
     const headers = new HttpHeaders(
       credentials
         ? {
-            authorization:
-              'Basic ' +
-              btoa(credentials.username + ':' + credentials.password),
+            authorization: 'Basic ' + token,
           }
         : {}
     );
@@ -42,5 +46,19 @@ export class LoginService {
           }
         }
       );
+  }
+
+  isAuthenticated(): boolean {
+    return sessionStorage.getItem('authToken') !== null;
+  }
+
+  logout(): void {
+    this.authenticated = false;
+    sessionStorage.removeItem('authToken');
+  }
+
+  getToken(): string {
+    const token = sessionStorage.getItem('authToken');
+    return token === null ? '' : token;
   }
 }
