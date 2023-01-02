@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Newuser } from 'src/app/interfaces/newuser';
-import { RegistrationService } from 'src/app/service/registration.service';
+import { RegistrationService } from 'src/app/auth/registration.service';
 
 @Component({
   selector: 'app-register',

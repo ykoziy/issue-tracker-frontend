@@ -5,11 +5,13 @@ import { IssueDetailComponent } from './issues/issue-detail/issue-detail.compone
 import { IssueListComponent } from './issues/issue-list/issue-list.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LoginComponent } from './user/login/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
-  { path: 'issue', component: IssueDetailComponent },
-  { path: 'issues', component: IssueListComponent },
-  { path: 'newIssue', component: NewIssueComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'issue', component: IssueDetailComponent, canActivate: [AuthGuard] },
+  { path: 'issues', component: IssueListComponent, canActivate: [AuthGuard] },
+  { path: 'newIssue', component: NewIssueComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
 ];
