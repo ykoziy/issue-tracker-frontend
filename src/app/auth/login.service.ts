@@ -35,7 +35,6 @@ export class LoginService {
           if (response.hasOwnProperty('id')) {
             this.userDetails = <UserDetails>response;
             this.userDetails.authToken = token;
-            console.log(this.userDetails);
             sessionStorage.setItem(
               'userDetails',
               JSON.stringify(this.userDetails)
