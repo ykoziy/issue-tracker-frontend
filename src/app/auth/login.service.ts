@@ -35,6 +35,7 @@ export class LoginService {
           if (response.hasOwnProperty('id')) {
             this.userDetails = <UserDetails>response;
             this.userDetails.authToken = token;
+            console.log(this.userDetails);
             sessionStorage.setItem(
               'userDetails',
               JSON.stringify(this.userDetails)
@@ -64,7 +65,13 @@ export class LoginService {
   }
 
   getToken(): string {
-    const token = sessionStorage.getItem('userDetails');
-    return token === null ? '' : token;
+    const userDetails = <UserDetails>(
+      JSON.parse(sessionStorage.getItem('userDetails') || '{}')
+    );
+    if (userDetails.authToken !== undefined) {
+      return userDetails.authToken;
+    } else {
+      return '';
+    }
   }
 }
