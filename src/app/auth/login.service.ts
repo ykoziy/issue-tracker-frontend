@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UserDetails } from '../model/userdetails';
 
 @Injectable()
 export class LoginService {
   private authenticated: boolean = false;
+  private userDetails: UserDetails = <UserDetails>{};
 
   constructor(private http: HttpClient) {}
 
@@ -14,8 +16,6 @@ export class LoginService {
     const token = window.btoa(
       credentials.username + ':' + credentials.password
     );
-
-    sessionStorage.setItem('authToken', token);
 
     const headers = new HttpHeaders(
       credentials
@@ -28,11 +28,17 @@ export class LoginService {
     this.http
       .get('http://localhost:8080/api/v1/basicauth', {
         headers: headers,
-        responseType: 'text',
+        responseType: 'json',
       })
       .subscribe(
         (response) => {
-          if (response === 'you are logged in') {
+          if (response.hasOwnProperty('id')) {
+            this.userDetails = <UserDetails>response;
+            this.userDetails.authToken = token;
+            sessionStorage.setItem(
+              'userDetails',
+              JSON.stringify(this.userDetails)
+            );
             this.authenticated = true;
           } else {
             this.authenticated = false;
@@ -49,16 +55,16 @@ export class LoginService {
   }
 
   isAuthenticated(): boolean {
-    return sessionStorage.getItem('authToken') !== null;
+    return sessionStorage.getItem('userDetails') !== null;
   }
 
   logout(): void {
     this.authenticated = false;
-    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('userDetails');
   }
 
   getToken(): string {
-    const token = sessionStorage.getItem('authToken');
+    const token = sessionStorage.getItem('userDetails');
     return token === null ? '' : token;
   }
 }
