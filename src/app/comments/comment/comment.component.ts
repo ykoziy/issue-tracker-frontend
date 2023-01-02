@@ -12,4 +12,12 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  onEdit(): void {
+    console.log('edit comment');
+  }
+
+  onDelete(): void {
+    console.log('delete comment');
+  }
 }

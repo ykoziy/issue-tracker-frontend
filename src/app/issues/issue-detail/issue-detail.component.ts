@@ -15,4 +15,8 @@ export class IssueDetailComponent implements OnInit {
   ngOnInit(): void {
     this.issue = <Issue>this.location.getState();
   }
+
+  onNewComment(): void {
+    console.log('new comment');
+  }
 }
