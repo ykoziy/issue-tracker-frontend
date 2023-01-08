@@ -73,4 +73,26 @@ export class LoginService {
       return '';
     }
   }
+
+  getUserId(): number {
+    const userDetails = <UserDetails>(
+      JSON.parse(sessionStorage.getItem('userDetails') || '{}')
+    );
+    if (userDetails.authToken !== undefined) {
+      return userDetails.id;
+    } else {
+      return 0;
+    }
+  }
+
+  getUserRole(): string {
+    const userDetails = <UserDetails>(
+      JSON.parse(sessionStorage.getItem('userDetails') || '{}')
+    );
+    if (userDetails.authToken !== undefined) {
+      return userDetails.userRole;
+    } else {
+      return '';
+    }
+  }
 }

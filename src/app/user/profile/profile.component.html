@@ -1,1 +1,74 @@
-<p>profile works!</p>
+<form *ngIf="userFound">
+  <div class="input-group mb-3 mx-auto">
+    <h3 class="mx-auto">Welcome back, {{ userProfile.userName }}</h3>
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="firstName" class="form-label" required>First Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      [value]="userProfile.firstName"
+      [disabled]="!isUpdating"
+    />
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="lastName" class="form-label" required>Last Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      [value]="userProfile.lastName"
+      [disabled]="!isUpdating"
+    />
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="email" class="form-label" required>Email:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      [value]="userProfile.email"
+      [disabled]="!isUpdating"
+    />
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="userName" class="form-label" required>Username:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="userName"
+      [value]="userProfile.userName"
+      [disabled]="!isUpdating"
+    />
+  </div>
+
+  <div class="input-group mb-3">
+    <button
+      type="submit"
+      class="btn btn-primary w-50 mx-auto"
+      *ngIf="!isUpdating"
+      (click)="onEdit()"
+    >
+      Edit
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary w-50 mx-auto"
+      *ngIf="isUpdating"
+      (click)="onSave()"
+    >
+      Save
+    </button>
+  </div>
+</form>
