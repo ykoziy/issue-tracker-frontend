@@ -1,6 +1,6 @@
 <form *ngIf="userFound">
   <div class="input-group mb-3 mx-auto">
-    <h3 class="mx-auto">Welcome back, {{ userProfile.userName }}</h3>
+    <h3 class="mx-auto">Welcome back, {{ userProfile.username }}</h3>
   </div>
 
   <div
@@ -48,7 +48,7 @@
       type="text"
       class="form-control"
       id="userName"
-      [value]="userProfile.userName"
+      [value]="userProfile.username"
       [disabled]="!isUpdating"
     />
   </div>

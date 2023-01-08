@@ -4,5 +4,5 @@ export interface Comment {
   issueId: number;
   addedOn: string;
   updatedOn: string;
-  userName: string;
+  username: string;
 }
