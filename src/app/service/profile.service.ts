@@ -15,4 +15,10 @@ export class ProfileService {
     const url = `${this.configUrl}?id=${userId}`;
     return this.http.get<User>(url);
   }
+
+  updateProfile(userDetails: User): Observable<any> {
+    const body = JSON.stringify(userDetails);
+    const headers = { 'content-type': 'application/json' };
+    return this.http.post(this.configUrl, body, { headers: headers });
+  }
 }

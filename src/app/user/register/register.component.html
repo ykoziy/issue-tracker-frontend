@@ -64,6 +64,7 @@
     *ngIf="fm('email').touched && fm('email').invalid"
     class="alert alert-danger w-50 mx-auto"
   >
+    <div *ngIf="fm('email').hasError('required')">Email is required.</div>
     <div *ngIf="fm('email').hasError('email')">Must be a valid email.</div>
   </div>
   <div

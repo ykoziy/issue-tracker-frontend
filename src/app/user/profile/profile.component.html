@@ -1,4 +1,4 @@
-<form *ngIf="userFound">
+<form [formGroup]="profileForm" *ngIf="userFound">
   <div class="input-group mb-3 mx-auto">
     <h3 class="mx-auto">Welcome back, {{ userProfile.username }}</h3>
   </div>
@@ -11,9 +11,22 @@
       type="text"
       class="form-control"
       id="firstName"
-      [value]="userProfile.firstName"
-      [disabled]="!isUpdating"
+      formControlName="firstName"
     />
+  </div>
+  <div
+    *ngIf="fm('firstName').touched && fm('firstName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('firstName').hasError('required')">
+      First name is required.
+    </div>
+    <div *ngIf="fm('firstName').hasError('maxlength')">
+      First name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="fm('firstName').hasError('pattern')">
+      First name must contain only alphabetic characters.
+    </div>
   </div>
   <div
     class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
@@ -23,9 +36,22 @@
       type="text"
       class="form-control"
       id="lastName"
-      [value]="userProfile.lastName"
-      [disabled]="!isUpdating"
+      formControlName="lastName"
     />
+  </div>
+  <div
+    *ngIf="fm('lastName').touched && fm('lastName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('lastName').hasError('required')">
+      Last name is required.
+    </div>
+    <div *ngIf="fm('lastName').hasError('maxlength')">
+      Last name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="fm('lastName').hasError('pattern')">
+      Last name must contain only alphabetic characters.
+    </div>
   </div>
   <div
     class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
@@ -35,9 +61,15 @@
       type="text"
       class="form-control"
       id="email"
-      [value]="userProfile.email"
-      [disabled]="!isUpdating"
+      formControlName="email"
     />
+  </div>
+  <div
+    *ngIf="fm('email').touched && fm('email').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('email').hasError('required')">Email is required.</div>
+    <div *ngIf="fm('email').hasError('email')">Must be a valid email.</div>
   </div>
 
   <div
@@ -48,16 +80,27 @@
       type="text"
       class="form-control"
       id="userName"
-      [value]="userProfile.username"
-      [disabled]="!isUpdating"
+      formControlName="userName"
     />
+  </div>
+  <div
+    *ngIf="fm('userName').touched && fm('userName').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="fm('userName').hasError('required')">Username is required.</div>
+    <div *ngIf="fm('userName').hasError('minlength')">
+      Username minimum length is {{ minLength }}.
+    </div>
+    <div *ngIf="fm('userName').hasError('pattern')">
+      Username must contain only alphanumeric characters.
+    </div>
   </div>
 
   <div class="input-group mb-3">
     <button
       type="submit"
       class="btn btn-primary w-50 mx-auto"
-      *ngIf="!isUpdating"
+      *ngIf="!isEditing"
       (click)="onEdit()"
     >
       Edit
@@ -65,7 +108,7 @@
     <button
       type="submit"
       class="btn btn-primary w-50 mx-auto"
-      *ngIf="isUpdating"
+      *ngIf="isEditing"
       (click)="onSave()"
     >
       Save
