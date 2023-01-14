@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LoginService } from 'src/app/auth/login.service';
 import { Comment } from 'src/app/interfaces/comment';
+import { CommentService } from 'src/app/service/comment.service';
 
 @Component({
   selector: 'app-comment',
@@ -9,7 +11,10 @@ import { Comment } from 'src/app/interfaces/comment';
 export class CommentComponent implements OnInit {
   @Input() comment!: Comment;
 
-  constructor() {}
+  constructor(
+    private commentService: CommentService,
+    private loginService: LoginService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -18,6 +23,11 @@ export class CommentComponent implements OnInit {
   }
 
   onDelete(): void {
-    console.log('delete comment');
+    const userId = this.loginService.getUserId();
+    if (userId !== 0) {
+      this.commentService.deleteComment(userId, this.comment.id).subscribe({
+        next: () => console.log('deleted'),
+      });
+    }
   }
 }

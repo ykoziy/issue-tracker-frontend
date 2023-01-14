@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-issue-detail',
@@ -10,13 +11,13 @@ import { Location } from '@angular/common';
 export class IssueDetailComponent implements OnInit {
   issue!: Issue;
 
-  constructor(private location: Location) {}
+  constructor(private location: Location, private router: Router) {}
 
   ngOnInit(): void {
     this.issue = <Issue>this.location.getState();
   }
 
   onNewComment(): void {
-    console.log('new comment');
+    this.router.navigateByUrl('/newComment', { state: this.issue });
   }
 }

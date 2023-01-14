@@ -22,6 +22,7 @@ import { RegisterComponent } from './user/register/register.component';
 import { RegistrationService } from './auth/registration.service';
 import { AuthInterceptorService } from './auth/authInterceptor.service';
 import { AuthGuard } from './auth/auth.guard';
+import { NewCommentComponent } from './comments/new-comment/new-comment.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AuthGuard } from './auth/auth.guard';
     CommentComponent,
     DateDiffPipe,
     RegisterComponent,
+    NewCommentComponent,
   ],
   imports: [
     BrowserModule,
