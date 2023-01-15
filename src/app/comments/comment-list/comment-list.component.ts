@@ -14,6 +14,14 @@ export class CommentListComponent implements OnInit {
   constructor(private commentService: CommentService) {}
 
   ngOnInit(): void {
+    this.getComments();
+  }
+
+  onModified(): void {
+    this.getComments();
+  }
+
+  getComments(): void {
     this.commentService.getComments(this.issueId).subscribe((commentData) => {
       this.comments = commentData;
     });

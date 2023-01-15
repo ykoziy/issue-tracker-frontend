@@ -24,8 +24,6 @@ export class NewCommentComponent implements OnInit {
     private loginService: LoginService
   ) {}
 
-  // to make new comment need:
-  // text, userID and issueId
   // make sure issue is not closed/resolved before adding comment??
 
   ngOnInit(): void {
@@ -43,7 +41,7 @@ export class NewCommentComponent implements OnInit {
         issueId: this.issue.id,
       };
       this.commentService.newComment(newComment).subscribe({
-        next: () => this.router.navigate(['/issues']),
+        next: () => this.router.navigate(['/issue', this.issue.id]),
       });
     }
   }

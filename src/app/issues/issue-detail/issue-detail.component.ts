@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { IssueService } from 'src/app/service/issue.service';
 
 @Component({
   selector: 'app-issue-detail',
@@ -11,10 +11,21 @@ import { Router } from '@angular/router';
 export class IssueDetailComponent implements OnInit {
   issue!: Issue;
 
-  constructor(private location: Location, private router: Router) {}
+  constructor(
+    private issueService: IssueService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.issue = <Issue>this.location.getState();
+    this.getIssue();
+  }
+
+  getIssue(): void {
+    this.route.params.subscribe((params: Params) => {
+      const id = +params['id'];
+      this.issueService.getIssue(id).subscribe((issue) => (this.issue = issue));
+    });
   }
 
   onNewComment(): void {

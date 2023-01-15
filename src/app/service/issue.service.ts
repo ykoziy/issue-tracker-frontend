@@ -14,6 +14,11 @@ export class IssueService {
     return this.http.get<Issue[]>(this.configUrl);
   }
 
+  getIssue(issueId: number): Observable<Issue> {
+    const url = `${this.configUrl}/${issueId}`;
+    return this.http.get<Issue>(url);
+  }
+
   newIssue(newIssue: NewIssue): Observable<any> {
     const body = JSON.stringify(newIssue);
     const headers = { 'content-type': 'application/json' };

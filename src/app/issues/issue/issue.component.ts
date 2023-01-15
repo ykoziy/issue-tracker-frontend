@@ -14,8 +14,8 @@ export class IssueComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  viewDetails(issue: Issue): void {
-    this.router.navigateByUrl('/issue', { state: issue });
+  viewDetails(): void {
+    this.router.navigate(['/issue', this.issue.id]);
   }
 
   setPriorityClass(priority: string): string {
