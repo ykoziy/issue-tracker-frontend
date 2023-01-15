@@ -15,13 +15,17 @@ export class CommentComponent implements OnInit {
 
   @Input() comment!: Comment;
 
+  userId: number = 0;
+
   constructor(
     private commentService: CommentService,
     private loginService: LoginService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userId = this.loginService.getUserId();
+  }
 
   onEdit(): void {
     //TODO: prevent opening this URL for other users.
@@ -29,12 +33,17 @@ export class CommentComponent implements OnInit {
   }
 
   onDelete(): void {
-    const userId = this.loginService.getUserId();
-    if (userId !== 0) {
+    if (this.userId !== 0) {
       this.router.navigate(['/issue', this.comment.issueId]);
-      this.commentService.deleteComment(userId, this.comment.id).subscribe({
-        next: () => this.commentModifiedEvent.emit(),
-      });
+      this.commentService
+        .deleteComment(this.userId, this.comment.id)
+        .subscribe({
+          next: () => this.commentModifiedEvent.emit(),
+        });
     }
+  }
+
+  isUserComment(authorId: number): boolean {
+    return this.userId === authorId;
   }
 }
