@@ -23,6 +23,7 @@ import { RegistrationService } from './auth/registration.service';
 import { AuthInterceptorService } from './auth/authInterceptor.service';
 import { AuthGuard } from './auth/auth.guard';
 import { NewCommentComponent } from './comments/new-comment/new-comment.component';
+import { IssueResolver } from './issues/issue-resolver.service';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { NewCommentComponent } from './comments/new-comment/new-comment.componen
     IssueService,
     CommentService,
     RegistrationService,
+    IssueResolver,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

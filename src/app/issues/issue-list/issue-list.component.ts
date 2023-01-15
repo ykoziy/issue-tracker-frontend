@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Issue } from 'src/app/interfaces/issue';
 import { IssueService } from 'src/app/service/issue.service';
 
@@ -10,11 +11,14 @@ import { IssueService } from 'src/app/service/issue.service';
 export class IssueListComponent implements OnInit {
   issues: Issue[] = [];
 
-  constructor(private issueService: IssueService) {}
+  constructor(
+    private issueService: IssueService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.issueService.getIssues().subscribe((issueData) => {
-      this.issues = issueData;
+    this.route.data.subscribe((response: any) => {
+      this.issues = response.issues;
     });
   }
 }
