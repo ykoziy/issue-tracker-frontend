@@ -23,6 +23,7 @@ import { RegistrationService } from './auth/registration.service';
 import { AuthInterceptorService } from './auth/authInterceptor.service';
 import { AuthGuard } from './auth/auth.guard';
 import { NewCommentComponent } from './comments/new-comment/new-comment.component';
+import { IssuesResolver } from './issues/issues-resolver.service';
 import { IssueResolver } from './issues/issue-resolver.service';
 
 @NgModule({
@@ -53,6 +54,7 @@ import { IssueResolver } from './issues/issue-resolver.service';
     IssueService,
     CommentService,
     RegistrationService,
+    IssuesResolver,
     IssueResolver,
     AuthGuard,
     {

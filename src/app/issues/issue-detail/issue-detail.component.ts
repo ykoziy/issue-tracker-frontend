@@ -18,13 +18,8 @@ export class IssueDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getIssue();
-  }
-
-  getIssue(): void {
-    this.route.params.subscribe((params: Params) => {
-      const id = +params['id'];
-      this.issueService.getIssue(id).subscribe((issue) => (this.issue = issue));
+    this.route.data.subscribe((response: any) => {
+      this.issue = response.issue;
     });
   }
 

@@ -9,12 +9,12 @@ import { Issue } from '../interfaces/issue';
 import { IssueService } from '../service/issue.service';
 
 @Injectable()
-export class IssueResolver implements Resolve<Issue> {
+export class IssuesResolver implements Resolve<Issue[]> {
   constructor(private issueService: IssueService) {}
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Issue | Observable<Issue> | Promise<Issue> {
-    return this.issueService.getIssue(route.params['id']);
+  ): Issue[] | Observable<Issue[]> | Promise<Issue[]> {
+    return this.issueService.getIssues();
   }
 }

@@ -8,6 +8,7 @@ import { LoginComponent } from './user/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ProfileComponent } from './user/profile/profile.component';
 import { NewCommentComponent } from './comments/new-comment/new-comment.component';
+import { IssuesResolver } from './issues/issues-resolver.service';
 import { IssueResolver } from './issues/issue-resolver.service';
 
 const routes: Routes = [
@@ -16,12 +17,13 @@ const routes: Routes = [
     path: 'issue/:id',
     component: IssueDetailComponent,
     canActivate: [AuthGuard],
+    resolve: { issue: IssueResolver },
   },
   {
     path: 'issues',
     component: IssueListComponent,
     canActivate: [AuthGuard],
-    resolve: { issues: IssueResolver },
+    resolve: { issues: IssuesResolver },
   },
   { path: 'newIssue', component: NewIssueComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
