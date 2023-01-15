@@ -25,6 +25,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { NewCommentComponent } from './comments/new-comment/new-comment.component';
 import { IssuesResolver } from './issues/issues-resolver.service';
 import { IssueResolver } from './issues/issue-resolver.service';
+import { EditCommentComponent } from './comments/edit-comment/edit-comment.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { IssueResolver } from './issues/issue-resolver.service';
     DateDiffPipe,
     RegisterComponent,
     NewCommentComponent,
+    EditCommentComponent,
   ],
   imports: [
     BrowserModule,

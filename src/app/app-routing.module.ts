@@ -10,6 +10,7 @@ import { ProfileComponent } from './user/profile/profile.component';
 import { NewCommentComponent } from './comments/new-comment/new-comment.component';
 import { IssuesResolver } from './issues/issues-resolver.service';
 import { IssueResolver } from './issues/issue-resolver.service';
+import { EditCommentComponent } from './comments/edit-comment/edit-comment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -32,6 +33,11 @@ const routes: Routes = [
   {
     path: 'newComment',
     component: NewCommentComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'editComment',
+    component: EditCommentComponent,
     canActivate: [AuthGuard],
   },
 ];

@@ -24,7 +24,8 @@ export class CommentComponent implements OnInit {
   ngOnInit(): void {}
 
   onEdit(): void {
-    console.log('edit comment');
+    //TODO: prevent opening this URL for other users.
+    this.router.navigate(['/editComment'], { state: this.comment });
   }
 
   onDelete(): void {

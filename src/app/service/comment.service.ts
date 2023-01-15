@@ -22,7 +22,12 @@ export class CommentService {
   }
 
   //TODO: edit comment
-  editComment(): void {}
+  editComment(userId: number, comment: Comment): Observable<any> {
+    const body = JSON.stringify(comment);
+    const headers = { 'content-type': 'application/json' };
+    const url = `${this.configUrl}/edit?userId=${userId}`;
+    return this.http.post(url, body, { headers: headers });
+  }
 
   deleteComment(userId: number, commentId: number): Observable<any> {
     const url = `${this.configUrl}?userId=${userId}&commentId=${commentId}`;
