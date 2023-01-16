@@ -32,13 +32,15 @@
         <div>{{ "&bull;" }}</div>
         <div>{{ issue.createdOn | dateDiff }}</div>
       </div>
-      <div class="d-flex gap-1">
-        <button
-          class="btn btn-danger btn-sm"
-          (click)="onCloseIssue()"
-          *ngIf="issue.status !== 'CLOSED' && isUserIssue()"
-        >
+      <div
+        class="d-flex gap-1"
+        *ngIf="issue.status !== 'CLOSED' && isUserIssue()"
+      >
+        <button class="btn btn-danger btn-sm" (click)="onCloseIssue()">
           Close
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="onDelete()">
+          Delete
         </button>
       </div>
     </div>

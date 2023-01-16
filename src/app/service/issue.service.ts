@@ -32,4 +32,9 @@ export class IssueService {
     const headers = { 'content-type': 'application/json' };
     return this.http.post(url, body, { headers: headers });
   }
+
+  deleteIssue(userId: number, issueId: number): Observable<any> {
+    const url = `${this.configUrl}?userId=${userId}&issueId=${issueId}`;
+    return this.http.delete(url);
+  }
 }

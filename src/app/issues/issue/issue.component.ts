@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/login.service';
 import { Issue } from 'src/app/interfaces/issue';
+import { IssueService } from 'src/app/service/issue.service';
 
 @Component({
   selector: 'app-issue',
@@ -15,7 +16,8 @@ export class IssueComponent implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private issueService: IssueService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,14 @@ export class IssueComponent implements OnInit {
     this.router.navigate([`/issue/${this.issue.id}/close`], {
       state: this.issue,
     });
+  }
+
+  onDelete(): void {
+    if (this.userId !== 0) {
+      this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
+        next: () => this.router.navigate(['/issues']),
+      });
+    }
   }
 
   isUserIssue(): boolean {
