@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Issue } from '../interfaces/issue';
 import { Observable } from 'rxjs';
 import { NewIssue } from '../interfaces/newissue';
+import { CloseIssue } from '../interfaces/closeissue';
 
 @Injectable()
 export class IssueService {
@@ -23,5 +24,12 @@ export class IssueService {
     const body = JSON.stringify(newIssue);
     const headers = { 'content-type': 'application/json' };
     return this.http.post(this.configUrl, body, { headers: headers });
+  }
+
+  closeIssue(closeIssue: CloseIssue): Observable<any> {
+    const body = JSON.stringify(closeIssue);
+    const url = `${this.configUrl}/close`;
+    const headers = { 'content-type': 'application/json' };
+    return this.http.post(url, body, { headers: headers });
   }
 }

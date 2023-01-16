@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/auth/login.service';
 import { NewIssue } from 'src/app/interfaces/newissue';
 import { IssueService } from 'src/app/service/issue.service';
 
@@ -15,6 +16,7 @@ export class NewIssueComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private issueService: IssueService,
+    private loginService: LoginService,
     private router: Router
   ) {}
 
@@ -27,14 +29,14 @@ export class NewIssueComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.newIssueForm.valid) {
+    const userId = this.loginService.getUserId();
+    if (this.newIssueForm.valid && userId !== 0) {
       let newIssue: NewIssue = {
         title: this.newIssueForm.value.issueTitle,
         description: this.newIssueForm.value.issueDescription,
         priority: this.newIssueForm.value.issuePriority,
-        userId: 1,
+        userId: userId,
       };
-      console.log(newIssue);
       this.issueService.newIssue(newIssue).subscribe({
         next: () => this.router.navigate(['/issues']),
       });

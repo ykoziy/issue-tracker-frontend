@@ -4,10 +4,10 @@ export interface Issue {
   description: string;
   priority: string;
   status: string;
-  createdById: string;
+  creatorId: number;
   creatorUsername: string;
   createdOn: string;
-  closedById: string;
+  closerId: number;
   updatedOn: string;
   closedOn: string;
   closerUsername: string;

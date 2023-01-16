@@ -1,0 +1,19 @@
+<form [formGroup]="closeIssueForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="resolution" class="form-label">Resolution</label>
+    <textarea
+      class="form-control"
+      id="resolution"
+      name="resolution"
+      rows="7"
+      formControlName="resolution"
+    ></textarea>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="!closeIssueForm.valid"
+  >
+    Submit
+  </button>
+</form>

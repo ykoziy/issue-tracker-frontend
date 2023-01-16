@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from 'src/app/auth/login.service';
 import { Issue } from 'src/app/interfaces/issue';
 
 @Component({
@@ -9,10 +10,17 @@ import { Issue } from 'src/app/interfaces/issue';
 })
 export class IssueComponent implements OnInit {
   @Input() issue!: Issue;
+  userId: number = 0;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private loginService: LoginService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userId = this.loginService.getUserId();
+  }
 
   viewDetails(): void {
     this.router.navigate(['/issue', this.issue.id]);
@@ -38,5 +46,15 @@ export class IssueComponent implements OnInit {
       return 'bg-secondary';
     }
     return '';
+  }
+
+  onCloseIssue(): void {
+    this.router.navigate([`/issue/${this.issue.id}/close`], {
+      state: this.issue,
+    });
+  }
+
+  isUserIssue(): boolean {
+    return this.userId === this.issue.creatorId;
   }
 }
