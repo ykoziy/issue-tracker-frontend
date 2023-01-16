@@ -18,21 +18,12 @@
     <p class="card-text">{{ comment.content }}</p>
   </div>
   <div class="card-footer">
-    <div class="btn-toolbar">
-      <button
-        class="btn btn-primary btn-sm"
-        (click)="onEdit()"
-        *ngIf="isUserComment(comment.authorId)"
-      >
-        Edit
-      </button>
-      <button
-        class="btn btn-danger btn-sm"
-        (click)="onDelete()"
-        *ngIf="isUserComment(comment.authorId)"
-      >
-        Delete
-      </button>
+    <div
+      class="btn-toolbar"
+      *ngIf="isUserComment(comment.authorId) || isAdmin()"
+    >
+      <button class="btn btn-primary btn-sm" (click)="onEdit()">Edit</button>
+      <button class="btn btn-danger btn-sm" (click)="onDelete()">Delete</button>
     </div>
   </div>
 </div>

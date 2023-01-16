@@ -46,4 +46,12 @@ export class CommentComponent implements OnInit {
   isUserComment(authorId: number): boolean {
     return this.userId === authorId;
   }
+
+  isAdmin(): boolean {
+    const role = this.loginService.getUserRole();
+    if (role === 'ADMIN') {
+      return true;
+    }
+    return false;
+  }
 }

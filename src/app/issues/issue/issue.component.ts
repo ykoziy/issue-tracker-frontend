@@ -67,4 +67,12 @@ export class IssueComponent implements OnInit {
   isUserIssue(): boolean {
     return this.userId === this.issue.creatorId;
   }
+
+  isAdmin(): boolean {
+    const role = this.loginService.getUserRole();
+    if (role === 'ADMIN') {
+      return true;
+    }
+    return false;
+  }
 }
