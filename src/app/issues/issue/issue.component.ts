@@ -28,4 +28,15 @@ export class IssueComponent implements OnInit {
     }
     return '';
   }
+
+  setStatusClass(status: string): string {
+    if (status.toLocaleLowerCase() === 'open') {
+      return 'bg-info';
+    } else if (status.toLocaleLowerCase() === 'wip') {
+      return 'bg-light';
+    } else if (status.toLocaleLowerCase() === 'closed') {
+      return 'bg-secondary';
+    }
+    return '';
+  }
 }

@@ -5,9 +5,11 @@ export interface Issue {
   priority: string;
   status: string;
   createdById: string;
+  creatorUsername: string;
   createdOn: string;
   closedById: string;
   updatedOn: string;
   closedOn: string;
+  closerUsername: string;
   resolution: string;
 }

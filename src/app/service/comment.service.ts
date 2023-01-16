@@ -21,7 +21,6 @@ export class CommentService {
     return this.http.post(this.configUrl, body, { headers: headers });
   }
 
-  //TODO: edit comment
   editComment(userId: number, comment: Comment): Observable<any> {
     const body = JSON.stringify(comment);
     const headers = { 'content-type': 'application/json' };
