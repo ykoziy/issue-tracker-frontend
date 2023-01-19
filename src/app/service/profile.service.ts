@@ -21,4 +21,16 @@ export class ProfileService {
     const headers = { 'content-type': 'application/json' };
     return this.http.post(this.configUrl, body, { headers: headers });
   }
+
+  getUsers(): Observable<User[]> {
+    const url = `${this.configUrl}/users`;
+    return this.http.get<User[]>(url);
+  }
+
+  banUser(userDetails: User) {
+    const body = JSON.stringify(userDetails);
+    const headers = { 'content-type': 'application/json' };
+    const url = `${this.configUrl}/ban`;
+    return this.http.post(url, body, { headers: headers });
+  }
 }

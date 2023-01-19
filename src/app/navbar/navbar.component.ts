@@ -20,4 +20,12 @@ export class NavbarComponent implements OnInit {
   isLoggedIn(): boolean {
     return this.loginService.getToken() !== '';
   }
+
+  isAdmin(): boolean {
+    const role = this.loginService.getUserRole();
+    if (role === 'ADMIN') {
+      return true;
+    }
+    return false;
+  }
 }

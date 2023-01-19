@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-group">
+        <li
+          class="list-group-item d-flex justify-content-between"
+          *ngFor="let user of users"
+          [ngClass]="setBannedStyle(user)"
+        >
+          <p>
+            {{ user.username }} | {{ user.email }} | {{ user.firstName }} |
+            {{ user.lastName }}
+          </p>
+          <button
+            class="btn btn-primary"
+            (click)="onBan(user)"
+            *ngIf="user.userRole !== 'ADMIN' && !user.locked"
+          >
+            Ban
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
