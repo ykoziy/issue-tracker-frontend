@@ -19,7 +19,7 @@
   </div>
   <div class="card-footer">
     <div
-      class="btn-toolbar"
+      class="btn-toolbar d-flex gap-1"
       *ngIf="isUserComment(comment.authorId) || isAdmin()"
     >
       <button class="btn btn-primary btn-sm" (click)="onEdit()">Edit</button>
