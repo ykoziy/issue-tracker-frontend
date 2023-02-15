@@ -18,12 +18,12 @@ export class AuthInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (
       this.loginService.isAuthenticated() &&
-      req.url.indexOf('basicauth') === -1
+      req.url.indexOf('authenticate') === -1
     ) {
       const authReq = req.clone({
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          Authorization: `Basic ${this.loginService.getToken()}`,
+          Authorization: `Bearer ${this.loginService.getToken()}`,
         }),
       });
       return next.handle(authReq);

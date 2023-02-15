@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserDetails } from '../model/userdetails';
+import { JwtPayload } from '../model/jwtpayload';
+
+export interface Response {
+  token: string;
+}
 
 @Injectable()
 export class LoginService {
@@ -17,24 +22,21 @@ export class LoginService {
       credentials.username + ':' + credentials.password
     );
 
-    const headers = new HttpHeaders(
-      credentials
-        ? {
-            authorization: 'Basic ' + token,
-          }
-        : {}
-    );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      username: credentials.username,
+      password: credentials.password,
+    };
 
     this.http
-      .get('http://localhost:8080/api/v1/basicauth', {
+      .post<Response>('http://localhost:8080/api/v1/auth/authenticate', body, {
         headers: headers,
         responseType: 'json',
       })
-      .subscribe(
-        (response) => {
-          if (response.hasOwnProperty('id')) {
-            this.userDetails = <UserDetails>response;
-            this.userDetails.authToken = token;
+      .subscribe({
+        next: (response) => {
+          if (response.hasOwnProperty('token')) {
+            this.userDetails = this.extractData(response);
             sessionStorage.setItem(
               'userDetails',
               JSON.stringify(this.userDetails)
@@ -45,13 +47,13 @@ export class LoginService {
           }
           return callback && callback();
         },
-        (error) => {
+        error: (error) => {
           if (error.status === 401) {
             this.authenticated = false;
             return callback && callback();
           }
-        }
-      );
+        },
+      });
   }
 
   isAuthenticated(): boolean {
@@ -72,6 +74,17 @@ export class LoginService {
     } else {
       return '';
     }
+  }
+
+  extractData(response: Response): UserDetails {
+    const token = response.token.split('.');
+    const payload: JwtPayload = JSON.parse(window.atob(token[1]));
+    const details: UserDetails = new UserDetails(
+      +payload.id,
+      payload.role,
+      response.token
+    );
+    return details;
   }
 
   getUserId(): number {
