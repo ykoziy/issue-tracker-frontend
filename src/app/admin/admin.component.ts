@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoginService } from '../auth/login.service';
 import { User } from '../interfaces/user';
 import { ProfileService } from '../service/profile.service';
 
@@ -12,11 +10,7 @@ import { ProfileService } from '../service/profile.service';
 export class AdminComponent implements OnInit {
   users: User[] = [];
 
-  constructor(
-    private profileService: ProfileService,
-    private loginService: LoginService,
-    private router: Router
-  ) {}
+  constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
     this.initUsers();
