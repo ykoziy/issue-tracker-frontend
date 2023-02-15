@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit {
   minLength = 2;
 
   userProfile: User = <User>{};
+  userId: number = 0;
+
   // show error if cant pull up user
   // show confirmation on good user update
   // confirm data is valid
@@ -35,18 +37,20 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.loginService.getUserId();
+    this.userId = this.loginService.getUserId();
     this.createProfileForm();
-    if (userId > 0) {
-      this.profileService.getProfile(userId).subscribe((userProfileData) => {
-        this.userProfile = userProfileData;
-        this.profileForm.patchValue({
-          firstName: this.userProfile.firstName,
-          lastName: this.userProfile.lastName,
-          userName: this.userProfile.username,
-          email: this.userProfile.email,
+    if (this.userId > 0) {
+      this.profileService
+        .getProfile(this.userId)
+        .subscribe((userProfileData) => {
+          this.userProfile = userProfileData;
+          this.profileForm.patchValue({
+            firstName: this.userProfile.firstName,
+            lastName: this.userProfile.lastName,
+            userName: this.userProfile.username,
+            email: this.userProfile.email,
+          });
         });
-      });
       this.userFound = true;
     }
   }
@@ -72,11 +76,16 @@ export class ProfileComponent implements OnInit {
         enabled: this.userProfile.enabled,
       };
 
-      this.profileService.updateProfile(updatedUser).subscribe({
+      this.profileService.updateProfile(updatedUser, this.userId).subscribe({
         next: () => {
           this.toggleIsEditing();
           this.enableInputs(this.profileForm, false);
-          this.router.navigate(['/profile']);
+          if (updatedUser.username !== this.userProfile.username) {
+            this.loginService.logout();
+            this.router.navigate(['/login']);
+          } else {
+            this.router.navigate(['/profile']);
+          }
         },
       });
     }
@@ -126,6 +135,6 @@ export class ProfileComponent implements OnInit {
   }
 
   fm(name: string): AbstractControl<any, any> {
-    return this.profileForm.controls[name] as AbstractControl<any, any>;
+    return this.profileForm.controls[name];
   }
 }

@@ -14,7 +14,7 @@ export class NavbarComponent implements OnInit {
 
   onLogout(): void {
     this.loginService.logout();
-    this.router.navigate(['issues']);
+    this.router.navigate(['login']);
   }
 
   isLoggedIn(): boolean {

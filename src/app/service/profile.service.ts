@@ -16,10 +16,11 @@ export class ProfileService {
     return this.http.get<User>(url);
   }
 
-  updateProfile(userDetails: User): Observable<any> {
+  updateProfile(userDetails: User, userId: number): Observable<any> {
     const body = JSON.stringify(userDetails);
     const headers = { 'content-type': 'application/json' };
-    return this.http.post(this.configUrl, body, { headers: headers });
+    const url = `${this.configUrl}?id=${userId}`;
+    return this.http.post(url, body, { headers: headers });
   }
 
   getUsers(): Observable<User[]> {
