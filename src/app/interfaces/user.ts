@@ -4,5 +4,6 @@ export interface User {
   username: string;
   email: string;
   userRole: string;
+  enabled?: boolean;
   locked?: boolean;
 }

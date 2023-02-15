@@ -31,7 +31,7 @@ export class AdminComponent implements OnInit {
   }
 
   setBannedStyle(user: User) {
-    if (user.locked) {
+    if (!user.enabled) {
       return 'list-group-item-danger';
     }
     return '';

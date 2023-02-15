@@ -68,6 +68,8 @@ export class ProfileComponent implements OnInit {
         email: this.profileForm.value.email,
         username: this.profileForm.value.userName,
         userRole: this.userProfile.userRole,
+        locked: this.userProfile.locked,
+        enabled: this.userProfile.enabled,
       };
 
       this.profileService.updateProfile(updatedUser).subscribe({
