@@ -51,8 +51,9 @@ export class IssueComponent implements OnInit {
 
   onEditIssue(event: Event): void {
     event.stopPropagation();
-    //TODO: prevent opening this URL for other users.
-    this.router.navigate([`/issue/${this.issue.id}/edit`]);
+    if (this.issue.creatorId === this.userId) {
+      this.router.navigate([`/issue/${this.issue.id}/edit`]);
+    }
   }
 
   onCloseIssue(event: Event): void {

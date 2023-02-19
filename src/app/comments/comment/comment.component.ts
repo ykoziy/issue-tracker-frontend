@@ -28,8 +28,9 @@ export class CommentComponent implements OnInit {
   }
 
   onEdit(): void {
-    //TODO: prevent opening this URL for other users.
-    this.router.navigate(['/editComment'], { state: this.comment });
+    if (this.comment.authorId === this.userId) {
+      this.router.navigate(['/editComment'], { state: this.comment });
+    }
   }
 
   onDelete(): void {
