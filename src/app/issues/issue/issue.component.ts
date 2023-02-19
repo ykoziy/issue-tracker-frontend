@@ -24,7 +24,6 @@ export class IssueComponent implements OnInit {
   }
 
   viewDetails(): void {
-    console.log('details click');
     this.router.navigate(['/issue', this.issue.id]);
   }
 
