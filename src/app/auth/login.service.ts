@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserDetails } from '../model/userdetails';
 import { JwtPayload } from '../model/jwtpayload';
+import { map, Observable } from 'rxjs';
 
 export interface Response {
   token: string;
@@ -14,27 +15,26 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  authenticate(
-    credentials: { username: string; password: string },
-    callback: { (): void; (): any }
-  ) {
-    const token = window.btoa(
-      credentials.username + ':' + credentials.password
-    );
+  loginWithToken() {}
 
+  authenticate(credentials: {
+    username: string;
+    password: string;
+  }): Observable<boolean> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let result: boolean;
     const body = {
       username: credentials.username,
       password: credentials.password,
     };
 
-    this.http
+    return this.http
       .post<Response>('http://localhost:8080/api/v1/auth/authenticate', body, {
         headers: headers,
         responseType: 'json',
       })
-      .subscribe({
-        next: (response) => {
+      .pipe(
+        map((response) => {
           if (response.hasOwnProperty('token')) {
             this.userDetails = this.extractData(response);
             sessionStorage.setItem(
@@ -42,18 +42,14 @@ export class LoginService {
               JSON.stringify(this.userDetails)
             );
             this.authenticated = true;
+            result = true;
           } else {
             this.authenticated = false;
+            result = false;
           }
-          return callback && callback();
-        },
-        error: (error) => {
-          if (error.status === 401) {
-            this.authenticated = false;
-            return callback && callback();
-          }
-        },
-      });
+        }),
+        map(() => result)
+      );
   }
 
   isAuthenticated(): boolean {
