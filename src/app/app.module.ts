@@ -28,6 +28,7 @@ import { IssueResolver } from './issues/issue-resolver.service';
 import { EditCommentComponent } from './comments/edit-comment/edit-comment.component';
 import { CloseIssueComponent } from './issues/close-issue/close-issue.component';
 import { AdminComponent } from './admin/admin.component';
+import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AdminComponent } from './admin/admin.component';
     EditCommentComponent,
     CloseIssueComponent,
     AdminComponent,
+    EditIssueComponent,
   ],
   imports: [
     BrowserModule,

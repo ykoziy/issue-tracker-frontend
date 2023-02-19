@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { IssueService } from 'src/app/service/issue.service';
 
 @Component({
   selector: 'app-issue-detail',
@@ -11,11 +10,7 @@ import { IssueService } from 'src/app/service/issue.service';
 export class IssueDetailComponent implements OnInit {
   issue!: Issue;
 
-  constructor(
-    private issueService: IssueService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((response: any) => {

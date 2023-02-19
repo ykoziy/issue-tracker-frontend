@@ -33,6 +33,13 @@ export class IssueService {
     return this.http.post(url, body, { headers: headers });
   }
 
+  editIssue(userId: number, issue: Issue): Observable<any> {
+    const body = JSON.stringify(issue);
+    const headers = { 'content-type': 'application/json' };
+    const url = `${this.configUrl}/edit?userId=${userId}`;
+    return this.http.post(url, body, { headers: headers });
+  }
+
   deleteIssue(userId: number, issueId: number): Observable<any> {
     const url = `${this.configUrl}?userId=${userId}&issueId=${issueId}`;
     return this.http.delete(url);

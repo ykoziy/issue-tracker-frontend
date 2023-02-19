@@ -13,12 +13,20 @@ import { IssueResolver } from './issues/issue-resolver.service';
 import { EditCommentComponent } from './comments/edit-comment/edit-comment.component';
 import { CloseIssueComponent } from './issues/close-issue/close-issue.component';
 import { AdminComponent } from './admin/admin.component';
+import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'issue/:id',
     component: IssueDetailComponent,
+    canActivate: [AuthGuard],
+    resolve: { issue: IssueResolver },
+    children: [],
+  },
+  {
+    path: 'issue/:id/edit',
+    component: EditIssueComponent,
     canActivate: [AuthGuard],
     resolve: { issue: IssueResolver },
     children: [],

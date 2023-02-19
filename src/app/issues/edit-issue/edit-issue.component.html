@@ -1,0 +1,45 @@
+<form [formGroup]="editIssueForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="title" class="form-label" required>Title</label>
+    <input
+      type="text"
+      class="form-control"
+      id="issueTitle"
+      name="issueTitle"
+      formControlName="issueTitle"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="issueDescription" class="form-label">Description</label>
+    <textarea
+      class="form-control"
+      id="issueDescription"
+      name="issueDescription"
+      rows="7"
+      formControlName="issueDescription"
+    ></textarea>
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3"
+    required
+  >
+    <select
+      class="form-select"
+      aria-label="issue priority dropdown"
+      name="issuePriority"
+      formControlName="issuePriority"
+    >
+      <option value="">Priority</option>
+      <option value="LOW">Low</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="HIGH">High</option>
+    </select>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="!editIssueForm.valid"
+  >
+    Submit
+  </button>
+</form>

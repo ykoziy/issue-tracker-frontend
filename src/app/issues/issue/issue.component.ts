@@ -15,7 +15,6 @@ export class IssueComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private loginService: LoginService,
     private issueService: IssueService
   ) {}
@@ -25,6 +24,7 @@ export class IssueComponent implements OnInit {
   }
 
   viewDetails(): void {
+    console.log('details click');
     this.router.navigate(['/issue', this.issue.id]);
   }
 
@@ -50,13 +50,21 @@ export class IssueComponent implements OnInit {
     return '';
   }
 
-  onCloseIssue(): void {
+  onEditIssue(event: Event): void {
+    event.stopPropagation();
+    //TODO: prevent opening this URL for other users.
+    this.router.navigate([`/issue/${this.issue.id}/edit`]);
+  }
+
+  onCloseIssue(event: Event): void {
+    event.stopPropagation();
     this.router.navigate([`/issue/${this.issue.id}/close`], {
       state: this.issue,
     });
   }
 
-  onDelete(): void {
+  onDelete(event: Event): void {
+    event.stopPropagation();
     if (this.userId !== 0) {
       this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
         next: () => this.router.navigate(['/issues']),

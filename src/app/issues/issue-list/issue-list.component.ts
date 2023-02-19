@@ -11,10 +11,7 @@ import { IssueService } from 'src/app/service/issue.service';
 export class IssueListComponent implements OnInit {
   issues: Issue[] = [];
 
-  constructor(
-    private issueService: IssueService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((response: any) => {

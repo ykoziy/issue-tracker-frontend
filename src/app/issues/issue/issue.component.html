@@ -36,10 +36,13 @@
         class="d-flex gap-1"
         *ngIf="issue.status !== 'CLOSED' && (isUserIssue() || isAdmin())"
       >
-        <button class="btn btn-danger btn-sm" (click)="onCloseIssue()">
+        <button class="btn btn-primary btn-sm" (click)="onEditIssue($event)">
+          Edit
+        </button>
+        <button class="btn btn-warning btn-sm" (click)="onCloseIssue($event)">
           Close
         </button>
-        <button class="btn btn-danger btn-sm" (click)="onDelete()">
+        <button class="btn btn-danger btn-sm" (click)="onDelete($event)">
           Delete
         </button>
       </div>

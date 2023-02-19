@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/login.service';
 import { CloseIssue } from 'src/app/interfaces/closeissue';
 import { Issue } from 'src/app/interfaces/issue';
@@ -19,13 +19,15 @@ export class CloseIssueComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private issueService: IssueService,
-    private location: Location,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.issue = <Issue>this.location.getState();
+    this.route.data.subscribe((response: any) => {
+      this.issue = response.issue;
+    });
     this.closeIssueForm = this.formBuilder.group({
       resolution: ['', [Validators.required, Validators.minLength(5)]],
     });
