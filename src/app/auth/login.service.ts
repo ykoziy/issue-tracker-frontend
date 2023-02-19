@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserDetails } from '../model/userdetails';
 import { JwtPayload } from '../model/jwtpayload';
-import { map, Observable } from 'rxjs';
+import { delay, map, Observable, of, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface Response {
   token: string;
@@ -12,8 +13,10 @@ export interface Response {
 export class LoginService {
   private authenticated: boolean = false;
   private userDetails: UserDetails = <UserDetails>{};
+  private tokenSubscription = new Subscription();
+  private timeout: number = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   loginWithToken() {}
 
@@ -36,11 +39,14 @@ export class LoginService {
       .pipe(
         map((response) => {
           if (response.hasOwnProperty('token')) {
-            this.userDetails = this.extractData(response);
+            this.userDetails = this.extractUserDetails(response);
+            this.timeout =
+              this.getTokenExpiration(response) * 1000 - new Date().valueOf();
             sessionStorage.setItem(
               'userDetails',
               JSON.stringify(this.userDetails)
             );
+            this.expirationCounter(this.timeout);
             this.authenticated = true;
             result = true;
           } else {
@@ -58,6 +64,7 @@ export class LoginService {
 
   logout(): void {
     this.authenticated = false;
+    this.tokenSubscription.unsubscribe();
     sessionStorage.removeItem('userDetails');
   }
 
@@ -72,7 +79,7 @@ export class LoginService {
     }
   }
 
-  extractData(response: Response): UserDetails {
+  extractUserDetails(response: Response): UserDetails {
     const token = response.token.split('.');
     const payload: JwtPayload = JSON.parse(window.atob(token[1]));
     const details: UserDetails = new UserDetails(
@@ -81,6 +88,12 @@ export class LoginService {
       response.token
     );
     return details;
+  }
+
+  getTokenExpiration(response: Response): number {
+    const token = response.token.split('.');
+    const payload: JwtPayload = JSON.parse(window.atob(token[1]));
+    return payload.exp;
   }
 
   getUserId(): number {
@@ -103,5 +116,16 @@ export class LoginService {
     } else {
       return '';
     }
+  }
+
+  expirationCounter(timeout: number) {
+    this.tokenSubscription.unsubscribe();
+    this.tokenSubscription = of(null)
+      .pipe(delay(timeout))
+      .subscribe(() => {
+        console.log('token expired');
+        this.logout();
+        this.router.navigate(['/login']);
+      });
   }
 }
