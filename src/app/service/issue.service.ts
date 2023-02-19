@@ -44,4 +44,26 @@ export class IssueService {
     const url = `${this.configUrl}?userId=${userId}&issueId=${issueId}`;
     return this.http.delete(url);
   }
+
+  //filtering methods
+
+  filterByPriority(priority: string): Observable<Issue[]> {
+    const url = `${this.configUrl}?priority=${priority.toUpperCase()}`;
+    return this.http.get<Issue[]>(url);
+  }
+
+  filterByStatus(status: string): Observable<Issue[]> {
+    const url = `${this.configUrl}?status=${status.toUpperCase()}`;
+    return this.http.get<Issue[]>(url);
+  }
+
+  filterByStatusAndPriority(
+    status: string,
+    priority: string
+  ): Observable<Issue[]> {
+    const url = `${
+      this.configUrl
+    }/filter?status=${status.toUpperCase()}&priority=${priority.toUpperCase()}`;
+    return this.http.get<Issue[]>(url);
+  }
 }

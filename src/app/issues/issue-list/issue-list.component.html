@@ -1,3 +1,38 @@
-<ng-container *ngFor="let issue of issues">
-  <app-issue [issue]="issue"></app-issue>
-</ng-container>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+        <div class="d-flex gap-2">
+          <select
+            class="form-control form-select"
+            aria-label="select priority"
+            id="issuePriority"
+            name="issuePriority"
+            formControlName="issuePriority"
+          >
+            <option value="">Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <select
+            class="form-control form-select"
+            aria-label="select status"
+            id="issueStatus"
+            name="issueStatus"
+            formControlName="issueStatus"
+          >
+            <option value="">Status</option>
+            <option value="open">Open</option>
+            <option value="wip">Wip</option>
+            <option value="closed">Closed</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+        </div>
+      </form>
+      <ng-container *ngFor="let issue of issues">
+        <app-issue [issue]="issue"></app-issue>
+      </ng-container>
+    </div>
+  </div>
+</div>

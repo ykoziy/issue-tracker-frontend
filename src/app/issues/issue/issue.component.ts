@@ -42,7 +42,7 @@ export class IssueComponent implements OnInit {
     if (status.toLocaleLowerCase() === 'open') {
       return 'bg-info';
     } else if (status.toLocaleLowerCase() === 'wip') {
-      return 'bg-light';
+      return 'bg-dark';
     } else if (status.toLocaleLowerCase() === 'closed') {
       return 'bg-secondary';
     }
