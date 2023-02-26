@@ -30,9 +30,22 @@
           <button type="submit" class="btn btn-primary btn-sm">Filter</button>
         </div>
       </form>
-      <ng-container *ngFor="let issue of issues">
+      <ng-container
+        *ngFor="
+          let issue of issueData.issues
+            | paginate
+              : {
+                  itemsPerPage: issueData.size,
+                  currentPage: issueData.number,
+                  totalItems: issueData.totalElements
+                }
+        "
+      >
         <app-issue [issue]="issue"></app-issue>
       </ng-container>
+      <pagination-controls
+        (pageChange)="handlePageChange($event)"
+      ></pagination-controls>
     </div>
   </div>
 </div>

@@ -4,6 +4,7 @@ import { Issue } from '../interfaces/issue';
 import { Observable } from 'rxjs';
 import { NewIssue } from '../interfaces/newissue';
 import { CloseIssue } from '../interfaces/closeissue';
+import { IssueData } from '../model/issuedata';
 
 @Injectable()
 export class IssueService {
@@ -11,8 +12,28 @@ export class IssueService {
 
   constructor(private http: HttpClient) {}
 
-  getIssues(): Observable<Issue[]> {
-    return this.http.get<Issue[]>(this.configUrl);
+  private urlParamBuilder(isNew: boolean, page?: number, size?: number) {
+    let params: string = '';
+    if (isNew === true) {
+      params += '?';
+    } else {
+      params += '&';
+    }
+
+    if (page && size) {
+      params += `page=${page}&size=${size}`;
+    } else if (page) {
+      params += `page=${page}`;
+    } else if (size) {
+      params += `size=${size}`;
+    }
+    return params;
+  }
+
+  getIssues(page?: number, size?: number): Observable<IssueData> {
+    let url = this.configUrl;
+    url += this.urlParamBuilder(true, page, size);
+    return this.http.get<IssueData>(url);
   }
 
   getIssue(issueId: number): Observable<Issue> {
@@ -47,23 +68,36 @@ export class IssueService {
 
   //filtering methods
 
-  filterByPriority(priority: string): Observable<Issue[]> {
-    const url = `${this.configUrl}?priority=${priority.toUpperCase()}`;
-    return this.http.get<Issue[]>(url);
+  filterByPriority(
+    priority: string,
+    page?: number,
+    size?: number
+  ): Observable<IssueData> {
+    let url = `${this.configUrl}?priority=${priority.toUpperCase()}`;
+    url += this.urlParamBuilder(false, page, size);
+    return this.http.get<IssueData>(url);
   }
 
-  filterByStatus(status: string): Observable<Issue[]> {
-    const url = `${this.configUrl}?status=${status.toUpperCase()}`;
-    return this.http.get<Issue[]>(url);
+  filterByStatus(
+    status: string,
+    page?: number,
+    size?: number
+  ): Observable<IssueData> {
+    let url = `${this.configUrl}?status=${status.toUpperCase()}`;
+    url += this.urlParamBuilder(false, page, size);
+    return this.http.get<IssueData>(url);
   }
 
   filterByStatusAndPriority(
     status: string,
-    priority: string
-  ): Observable<Issue[]> {
-    const url = `${
+    priority: string,
+    page?: number,
+    size?: number
+  ): Observable<IssueData> {
+    let url = `${
       this.configUrl
     }/filter?status=${status.toUpperCase()}&priority=${priority.toUpperCase()}`;
-    return this.http.get<Issue[]>(url);
+    url += this.urlParamBuilder(false, page, size);
+    return this.http.get<IssueData>(url);
   }
 }

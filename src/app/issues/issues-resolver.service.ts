@@ -5,16 +5,16 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Issue } from '../interfaces/issue';
+import { IssueData } from '../model/issuedata';
 import { IssueService } from '../service/issue.service';
 
 @Injectable()
-export class IssuesResolver implements Resolve<Issue[]> {
+export class IssuesResolver implements Resolve<IssueData> {
   constructor(private issueService: IssueService) {}
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Issue[] | Observable<Issue[]> | Promise<Issue[]> {
+  ): IssueData | Observable<IssueData> | Promise<IssueData> {
     return this.issueService.getIssues();
   }
 }

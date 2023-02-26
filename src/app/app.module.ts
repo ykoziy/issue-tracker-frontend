@@ -29,6 +29,7 @@ import { EditCommentComponent } from './comments/edit-comment/edit-comment.compo
 import { CloseIssueComponent } from './issues/close-issue/close-issue.component';
 import { AdminComponent } from './admin/admin.component';
 import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
   ],
   providers: [
     LoginService,

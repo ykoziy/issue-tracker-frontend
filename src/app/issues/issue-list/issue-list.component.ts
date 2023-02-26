@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Issue } from 'src/app/interfaces/issue';
+import { IssueData } from 'src/app/model/issuedata';
 import { IssueService } from 'src/app/service/issue.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { IssueService } from 'src/app/service/issue.service';
 })
 export class IssueListComponent implements OnInit {
   filterForm = {} as FormGroup;
-  issues: Issue[] = [];
+  issueData = <IssueData>{};
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,7 +22,7 @@ export class IssueListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe((response: any) => {
-      this.issues = response.issues;
+      this.issueData = response.issues;
     });
 
     this.filterForm = this.formBuilder.group({
@@ -35,31 +36,39 @@ export class IssueListComponent implements OnInit {
     const filterStatus = this.filterForm.value.issueStatus;
 
     if (filterPriority === '' && filterStatus === '') {
-      this.issueService.getIssues().subscribe((issueData) => {
-        this.issues = issueData;
+      this.issueService.getIssues().subscribe((response: IssueData) => {
+        this.issueData = response;
       });
     }
 
     if (filterPriority !== '' && filterStatus === '') {
       this.issueService
         .filterByPriority(filterPriority)
-        .subscribe((issueData) => {
-          this.issues = issueData;
+        .subscribe((response: IssueData) => {
+          this.issueData = response;
         });
     }
 
     if (filterStatus !== '' && filterPriority === '') {
-      this.issueService.filterByStatus(filterStatus).subscribe((issueData) => {
-        this.issues = issueData;
-      });
+      this.issueService
+        .filterByStatus(filterStatus)
+        .subscribe((response: IssueData) => {
+          this.issueData = response;
+        });
     }
 
     if (filterStatus !== '' && filterPriority !== '') {
       this.issueService
         .filterByStatusAndPriority(filterStatus, filterPriority)
-        .subscribe((issueData) => {
-          this.issues = issueData;
+        .subscribe((response: IssueData) => {
+          this.issueData = response;
         });
     }
+  }
+
+  handlePageChange(page: number) {
+    this.issueService.getIssues(page).subscribe((response: IssueData) => {
+      this.issueData = response;
+    });
   }
 }
