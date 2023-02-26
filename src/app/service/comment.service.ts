@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Comment } from '../interfaces/comment';
 import { NewComment } from '../interfaces/newcomment';
+import { CommentData } from '../model/commentdata';
 
 @Injectable()
 export class CommentService {
@@ -10,9 +11,32 @@ export class CommentService {
 
   constructor(private http: HttpClient) {}
 
-  getComments(issueId: number): Observable<Comment[]> {
-    const url = `${this.configUrl}?issueId=${issueId}`;
-    return this.http.get<Comment[]>(url);
+  private urlParamBuilder(isNew: boolean, page?: number, size?: number) {
+    let params: string = '';
+    if (isNew === true) {
+      params += '?';
+    } else {
+      params += '&';
+    }
+
+    if (page && size) {
+      params += `page=${page}&size=${size}`;
+    } else if (page) {
+      params += `page=${page}`;
+    } else if (size) {
+      params += `size=${size}`;
+    }
+    return params;
+  }
+
+  getComments(
+    issueId: number,
+    page?: number,
+    size?: number
+  ): Observable<CommentData> {
+    let url = `${this.configUrl}?issueId=${issueId}`;
+    url += this.urlParamBuilder(false, page, size);
+    return this.http.get<CommentData>(url);
   }
 
   newComment(newComment: NewComment): Observable<any> {

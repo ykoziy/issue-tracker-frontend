@@ -1,6 +1,21 @@
-<ng-container *ngFor="let comment of comments">
+<ng-container
+  *ngFor="
+    let comment of commentData.comments
+      | paginate
+        : {
+            itemsPerPage: commentData.size,
+            currentPage: commentData.number,
+            totalItems: commentData.totalElements
+          }
+  "
+>
   <app-comment
     [comment]="comment"
     (commentModifiedEvent)="onModified()"
   ></app-comment>
 </ng-container>
+<div class="pagination">
+  <pagination-controls
+    (pageChange)="handlePageChange($event)"
+  ></pagination-controls>
+</div>
