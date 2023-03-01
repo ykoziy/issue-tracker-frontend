@@ -1,8 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { Issue } from 'src/app/interfaces/issue';
 import { IssueService } from 'src/app/service/issue.service';
+import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
+import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
 
 @Component({
   selector: 'app-issue',
@@ -12,6 +15,12 @@ import { IssueService } from 'src/app/service/issue.service';
 export class IssueComponent implements OnInit {
   @Input() issue!: Issue;
   userId: number = 0;
+
+  @ViewChild(AnchorDirective, { static: false })
+  modalHost!: AnchorDirective;
+  private cancelSub!: Subscription;
+  private okSub!: Subscription;
+  private message = 'This will delete the issue. Are you sure?';
 
   constructor(
     private router: Router,
@@ -58,18 +67,20 @@ export class IssueComponent implements OnInit {
 
   onCloseIssue(event: Event): void {
     event.stopPropagation();
-    this.router.navigate([`/issue/${this.issue.id}/close`], {
-      state: this.issue,
-    });
+    this.router.navigate([`/issue/${this.issue.id}/close`]);
   }
 
   onDelete(event: Event): void {
     event.stopPropagation();
     if (this.userId !== 0) {
-      this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
-        next: () => this.router.navigate(['/issues']),
-      });
+      this.showConfirmation();
     }
+  }
+
+  deleteIssue(): void {
+    this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
+      next: () => this.router.navigate(['/issues']),
+    });
   }
 
   isUserIssue(): boolean {
@@ -82,5 +93,25 @@ export class IssueComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  showConfirmation(): void {
+    const confirmRef =
+      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
+        ConfirmComponent
+      );
+
+    confirmRef.instance.message = this.message;
+
+    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
+      this.cancelSub.unsubscribe();
+      confirmRef.destroy();
+    });
+
+    this.okSub = confirmRef.instance.ok.subscribe(() => {
+      this.deleteIssue();
+      this.okSub.unsubscribe();
+      confirmRef.destroy();
+    });
   }
 }

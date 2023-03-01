@@ -35,6 +35,7 @@ const routes: Routes = [
     path: 'issue/:id/close',
     component: CloseIssueComponent,
     canActivate: [AuthGuard],
+    resolve: { issue: IssueResolver },
     children: [],
   },
   {

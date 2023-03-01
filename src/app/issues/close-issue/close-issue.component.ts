@@ -1,11 +1,13 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { CloseIssue } from 'src/app/interfaces/closeissue';
 import { Issue } from 'src/app/interfaces/issue';
 import { IssueService } from 'src/app/service/issue.service';
+import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
+import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
 
 @Component({
   selector: 'app-close-issue',
@@ -15,6 +17,12 @@ import { IssueService } from 'src/app/service/issue.service';
 export class CloseIssueComponent implements OnInit {
   closeIssueForm = {} as FormGroup;
   issue!: Issue;
+
+  @ViewChild(AnchorDirective, { static: false })
+  modalHost!: AnchorDirective;
+  private cancelSub!: Subscription;
+  private okSub!: Subscription;
+  private message = 'This will close the issue. Are you sure?';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,8 +42,14 @@ export class CloseIssueComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.closeIssueForm.valid && this.issue.id) {
+      this.showConfirmation();
+    }
+  }
+
+  closeIssue(): void {
     const userId = this.loginService.getUserId();
-    if (this.closeIssueForm.valid && userId !== 0 && this.issue.id) {
+    if (userId !== 0) {
       const closeIssue: CloseIssue = {
         resolution: this.closeIssueForm.value.resolution,
         userId: userId,
@@ -45,5 +59,25 @@ export class CloseIssueComponent implements OnInit {
         next: () => this.router.navigate(['/issues']),
       });
     }
+  }
+
+  showConfirmation(): void {
+    const confirmRef =
+      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
+        ConfirmComponent
+      );
+
+    confirmRef.instance.message = this.message;
+
+    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
+      this.cancelSub.unsubscribe();
+      confirmRef.destroy();
+    });
+
+    this.okSub = confirmRef.instance.ok.subscribe(() => {
+      this.closeIssue();
+      this.okSub.unsubscribe();
+      confirmRef.destroy();
+    });
   }
 }
