@@ -30,6 +30,8 @@ import { CloseIssueComponent } from './issues/close-issue/close-issue.component'
 import { AdminComponent } from './admin/admin.component';
 import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ConfirmComponent } from './shared/modal/confirm/confirm.component';
+import { AnchorDirective } from './shared/modal/anchor.directive';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CloseIssueComponent,
     AdminComponent,
     EditIssueComponent,
+    ConfirmComponent,
+    AnchorDirective,
   ],
   imports: [
     BrowserModule,
