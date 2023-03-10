@@ -12,6 +12,8 @@ import { IssueService } from 'src/app/service/issue.service';
 export class IssueListComponent implements OnInit {
   filterForm = {} as FormGroup;
   issueData = <IssueData>{};
+  filterPriority = '';
+  filterStatus = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,34 +33,37 @@ export class IssueListComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const filterPriority = this.filterForm.value.issuePriority;
-    const filterStatus = this.filterForm.value.issueStatus;
+    this.filterPriority = this.filterForm.value.issuePriority;
+    this.filterStatus = this.filterForm.value.issueStatus;
+    this.updatePage();
+  }
 
-    if (filterPriority === '' && filterStatus === '') {
-      this.issueService.getIssues().subscribe((response: IssueData) => {
+  updatePage(page?: number) {
+    if (this.filterPriority === '' && this.filterStatus === '') {
+      this.issueService.getIssues(page).subscribe((response: IssueData) => {
         this.issueData = response;
       });
     }
 
-    if (filterPriority !== '' && filterStatus === '') {
+    if (this.filterPriority !== '' && this.filterStatus === '') {
       this.issueService
-        .filterByPriority(filterPriority)
+        .filterByPriority(this.filterPriority, page)
         .subscribe((response: IssueData) => {
           this.issueData = response;
         });
     }
 
-    if (filterStatus !== '' && filterPriority === '') {
+    if (this.filterStatus !== '' && this.filterPriority === '') {
       this.issueService
-        .filterByStatus(filterStatus)
+        .filterByStatus(this.filterStatus, page)
         .subscribe((response: IssueData) => {
           this.issueData = response;
         });
     }
 
-    if (filterStatus !== '' && filterPriority !== '') {
+    if (this.filterStatus !== '' && this.filterPriority !== '') {
       this.issueService
-        .filterByStatusAndPriority(filterStatus, filterPriority)
+        .filterByStatusAndPriority(this.filterStatus, this.filterPriority, page)
         .subscribe((response: IssueData) => {
           this.issueData = response;
         });
@@ -66,8 +71,6 @@ export class IssueListComponent implements OnInit {
   }
 
   handlePageChange(page: number) {
-    this.issueService.getIssues(page - 1).subscribe((response: IssueData) => {
-      this.issueData = response;
-    });
+    this.updatePage(page - 1);
   }
 }
