@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Comment } from 'src/app/interfaces/comment';
 import { CommentData } from 'src/app/model/commentdata';
 import { CommentService } from 'src/app/service/comment.service';
 
@@ -32,7 +31,7 @@ export class CommentListComponent implements OnInit {
 
   handlePageChange(page: number) {
     this.commentService
-      .getComments(this.issueId, page)
+      .getComments(this.issueId, page - 1)
       .subscribe((response: CommentData) => {
         this.commentData = response;
       });

@@ -36,7 +36,7 @@
             | paginate
               : {
                   itemsPerPage: issueData.size,
-                  currentPage: issueData.number,
+                  currentPage: issueData.number + 1,
                   totalItems: issueData.totalElements
                 }
         "

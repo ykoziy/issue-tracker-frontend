@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Issue } from 'src/app/interfaces/issue';
 import { IssueData } from 'src/app/model/issuedata';
 import { IssueService } from 'src/app/service/issue.service';
 
@@ -67,7 +66,7 @@ export class IssueListComponent implements OnInit {
   }
 
   handlePageChange(page: number) {
-    this.issueService.getIssues(page).subscribe((response: IssueData) => {
+    this.issueService.getIssues(page - 1).subscribe((response: IssueData) => {
       this.issueData = response;
     });
   }
