@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,9 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { User } from 'src/app/interfaces/user';
 import { ProfileService } from 'src/app/service/profile.service';
+import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
+import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +20,12 @@ import { ProfileService } from 'src/app/service/profile.service';
 })
 export class ProfileComponent implements OnInit {
   profileForm = {} as FormGroup;
+  @ViewChild(AnchorDirective, { static: false })
+  modalHost!: AnchorDirective;
+  private cancelSub!: Subscription;
+  private okSub!: Subscription;
+  private message = 'This will update the profile. Are you sure?';
+
   nameMaxLength = 30;
   minLength = 2;
 
@@ -66,28 +75,7 @@ export class ProfileComponent implements OnInit {
 
   onSave(): void {
     if (this.profileForm.valid) {
-      const updatedUser: User = {
-        firstName: this.profileForm.value.firstName,
-        lastName: this.profileForm.value.lastName,
-        email: this.profileForm.value.email,
-        username: this.profileForm.value.userName,
-        userRole: this.userProfile.userRole,
-        locked: this.userProfile.locked,
-        enabled: this.userProfile.enabled,
-      };
-
-      this.profileService.updateProfile(updatedUser, this.userId).subscribe({
-        next: () => {
-          this.toggleIsEditing();
-          this.enableInputs(this.profileForm, false);
-          if (updatedUser.username !== this.userProfile.username) {
-            this.loginService.logout();
-            this.router.navigate(['/login']);
-          } else {
-            this.router.navigate(['/profile']);
-          }
-        },
-      });
+      this.showConfirmation();
     }
   }
 
@@ -136,5 +124,49 @@ export class ProfileComponent implements OnInit {
 
   fm(name: string): AbstractControl<any, any> {
     return this.profileForm.controls[name];
+  }
+
+  showConfirmation(): void {
+    const confirmRef =
+      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
+        ConfirmComponent
+      );
+
+    confirmRef.instance.message = this.message;
+
+    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
+      this.cancelSub.unsubscribe();
+      confirmRef.destroy();
+    });
+
+    this.okSub = confirmRef.instance.ok.subscribe(() => {
+      this.saveProfile();
+      this.okSub.unsubscribe();
+      confirmRef.destroy();
+    });
+  }
+
+  saveProfile(): void {
+    const updatedUser: User = {
+      firstName: this.profileForm.value.firstName,
+      lastName: this.profileForm.value.lastName,
+      email: this.profileForm.value.email,
+      username: this.profileForm.value.userName,
+      userRole: this.userProfile.userRole,
+      locked: this.userProfile.locked,
+      enabled: this.userProfile.enabled,
+    };
+    this.profileService.updateProfile(updatedUser, this.userId).subscribe({
+      next: () => {
+        this.toggleIsEditing();
+        this.enableInputs(this.profileForm, false);
+        if (updatedUser.username !== this.userProfile.username) {
+          this.loginService.logout();
+          this.router.navigate(['/login']);
+        } else {
+          this.router.navigate(['/profile']);
+        }
+      },
+    });
   }
 }
