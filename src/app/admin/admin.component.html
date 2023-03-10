@@ -4,7 +4,15 @@
       <ul class="list-group">
         <li
           class="list-group-item d-flex justify-content-between"
-          *ngFor="let user of users"
+          *ngFor="
+            let user of userData.users
+              | paginate
+                : {
+                    itemsPerPage: userData.size,
+                    currentPage: userData.number + 1,
+                    totalItems: userData.totalElements
+                  }
+          "
           [ngClass]="setBannedStyle(user)"
         >
           <p>
@@ -20,6 +28,11 @@
           </button>
         </li>
       </ul>
+      <div class="pagination">
+        <pagination-controls
+          (pageChange)="handlePageChange($event)"
+        ></pagination-controls>
+      </div>
     </div>
   </div>
 </div>

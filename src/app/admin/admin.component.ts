@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../interfaces/user';
+import { UserData } from '../model/userdata';
 import { ProfileService } from '../service/profile.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { ProfileService } from '../service/profile.service';
 })
 export class AdminComponent implements OnInit {
   users: User[] = [];
+  userData = <UserData>{};
 
   constructor(private profileService: ProfileService) {}
 
@@ -16,9 +18,15 @@ export class AdminComponent implements OnInit {
     this.initUsers();
   }
 
+  handlePageChange(page: number) {
+    this.profileService.getUsers(page - 1).subscribe((response: UserData) => {
+      this.userData = response;
+    });
+  }
+
   initUsers(): void {
-    this.profileService.getUsers().subscribe((userData) => {
-      this.users = userData;
+    this.profileService.getUsers().subscribe((response: UserData) => {
+      this.userData = response;
     });
   }
 

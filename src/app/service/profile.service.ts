@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces/user';
+import { UserData } from '../model/userdata';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,24 @@ export class ProfileService {
   configUrl: string = 'http://localhost:8080/api/v1/profile';
 
   constructor(private http: HttpClient) {}
+
+  private urlParamBuilder(isNew: boolean, page?: number, size?: number) {
+    let params: string = '';
+    if (isNew === true) {
+      params += '?';
+    } else {
+      params += '&';
+    }
+
+    if (page && size) {
+      params += `page=${page}&size=${size}`;
+    } else if (page) {
+      params += `page=${page}`;
+    } else if (size) {
+      params += `size=${size}`;
+    }
+    return params;
+  }
 
   getProfile(userId: number): Observable<User> {
     const url = `${this.configUrl}?id=${userId}`;
@@ -23,9 +42,10 @@ export class ProfileService {
     return this.http.post(url, body, { headers: headers });
   }
 
-  getUsers(): Observable<User[]> {
-    const url = `${this.configUrl}/users`;
-    return this.http.get<User[]>(url);
+  getUsers(page?: number, size?: number): Observable<UserData> {
+    let url = `${this.configUrl}/users`;
+    url += this.urlParamBuilder(true, page, size);
+    return this.http.get<UserData>(url);
   }
 
   banUser(userDetails: User) {
