@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { NewIssue } from 'src/app/interfaces/newissue';
 import { IssueService } from 'src/app/service/issue.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-new-issue',
@@ -16,17 +15,15 @@ import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component
 export class NewIssueComponent implements OnInit {
   newIssueForm = {} as FormGroup;
 
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will create a new issue. Are you sure?';
 
   constructor(
     private formBuilder: FormBuilder,
     private issueService: IssueService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit(): void {
@@ -35,11 +32,18 @@ export class NewIssueComponent implements OnInit {
       issueDescription: ['', [Validators.required]],
       issuePriority: ['', [Validators.required]],
     });
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.newIssueForm.valid) {
-      this.showConfirmation();
+      const message = 'This will create a new issue. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.saveIssue();
+      }
     }
   }
 
@@ -56,25 +60,5 @@ export class NewIssueComponent implements OnInit {
         next: () => this.router.navigate(['/issues']),
       });
     }
-  }
-
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.saveIssue();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
   }
 }

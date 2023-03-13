@@ -7,12 +7,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { Comment } from 'src/app/interfaces/comment';
 import { CommentService } from 'src/app/service/comment.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-comment',
@@ -22,25 +21,23 @@ import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component
 export class CommentComponent implements OnInit {
   @Output()
   commentModifiedEvent = new EventEmitter();
-
   @Input() comment!: Comment;
-
   userId: number = 0;
-
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will delete the comment. Are you sure?';
 
   constructor(
     private commentService: CommentService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit(): void {
     this.userId = this.loginService.getUserId();
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
   onEdit(): void {
@@ -49,9 +46,13 @@ export class CommentComponent implements OnInit {
     }
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (this.userId !== 0) {
-      this.showConfirmation();
+      const message = 'This will delete the comment. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.deleteComment();
+      }
     }
   }
 
@@ -72,25 +73,5 @@ export class CommentComponent implements OnInit {
       return true;
     }
     return false;
-  }
-
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.deleteComment();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
   }
 }

@@ -6,12 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { User } from 'src/app/interfaces/user';
 import { ProfileService } from 'src/app/service/profile.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
 import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({

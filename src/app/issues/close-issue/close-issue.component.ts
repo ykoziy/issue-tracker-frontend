@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { CloseIssue } from 'src/app/interfaces/closeissue';
 import { Issue } from 'src/app/interfaces/issue';
 import { IssueService } from 'src/app/service/issue.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-close-issue',
@@ -18,18 +17,16 @@ export class CloseIssueComponent implements OnInit {
   closeIssueForm = {} as FormGroup;
   issue!: Issue;
 
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will close the issue. Are you sure?';
 
   constructor(
     private formBuilder: FormBuilder,
     private issueService: IssueService,
     private loginService: LoginService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit(): void {
@@ -39,11 +36,18 @@ export class CloseIssueComponent implements OnInit {
     this.closeIssueForm = this.formBuilder.group({
       resolution: ['', [Validators.required, Validators.minLength(5)]],
     });
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.closeIssueForm.valid && this.issue.id) {
-      this.showConfirmation();
+      const message = 'This will close the issue. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.closeIssue();
+      }
     }
   }
 
@@ -59,25 +63,5 @@ export class CloseIssueComponent implements OnInit {
         next: () => this.router.navigate(['/issues']),
       });
     }
-  }
-
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.closeIssue();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
   }
 }

@@ -2,12 +2,11 @@ import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/auth/login.service';
 import { Comment } from 'src/app/interfaces/comment';
 import { CommentService } from 'src/app/service/comment.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-edit-comment',
@@ -17,18 +16,16 @@ import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component
 export class EditCommentComponent implements OnInit {
   comment!: Comment;
   editCommentForm = {} as FormGroup;
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will update the comment. Are you sure?';
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private location: Location,
     private commentService: CommentService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +36,9 @@ export class EditCommentComponent implements OnInit {
     this.editCommentForm.patchValue({
       userComment: this.comment.content,
     });
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
   saveComment(): void {
@@ -54,29 +54,13 @@ export class EditCommentComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.editCommentForm.valid) {
-      this.showConfirmation();
+      const message = 'This will update the comment. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.saveComment();
+      }
     }
-  }
-
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.saveComment();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
   }
 }

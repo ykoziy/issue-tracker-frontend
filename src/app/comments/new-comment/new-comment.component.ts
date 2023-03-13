@@ -6,40 +6,28 @@ import { Issue } from 'src/app/interfaces/issue';
 import { NewComment } from 'src/app/interfaces/newcomment';
 import { CommentService } from 'src/app/service/comment.service';
 import { LoginService } from 'src/app/auth/login.service';
-import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
-import { Subscription } from 'rxjs';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-new-comment',
   templateUrl: './new-comment.component.html',
   styleUrls: ['./new-comment.component.sass'],
 })
-export class NewCommentComponent implements OnInit, OnDestroy {
+export class NewCommentComponent implements OnInit {
   issue!: Issue;
   newCommentForm = {} as FormGroup;
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will add a new comment. Are you sure?';
 
   constructor(
     private location: Location,
     private formBuilder: FormBuilder,
     private router: Router,
     private commentService: CommentService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private confirmationModalService: ConfirmationModalService
   ) {}
-
-  ngOnDestroy(): void {
-    if (this.cancelSub) {
-      this.cancelSub.unsubscribe();
-    }
-    if (this.okSub) {
-      this.okSub.unsubscribe();
-    }
-  }
 
   // make sure issue is not closed/resolved before adding comment??
 
@@ -48,6 +36,9 @@ export class NewCommentComponent implements OnInit, OnDestroy {
     this.newCommentForm = this.formBuilder.group({
       userComment: ['', [Validators.required]],
     });
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
   saveComment(): void {
@@ -61,29 +52,13 @@ export class NewCommentComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.newCommentForm.valid) {
-      this.showConfirmation();
+      const message = 'This will add a new comment. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.saveComment();
+      }
     }
-  }
-
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.saveComment();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
   }
 }

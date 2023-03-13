@@ -30,7 +30,6 @@ import { CloseIssueComponent } from './issues/close-issue/close-issue.component'
 import { AdminComponent } from './admin/admin.component';
 import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ConfirmComponent } from './shared/modal/confirm/confirm.component';
 import { AnchorDirective } from './shared/modal/anchor.directive';
 import { ConfirmationComponent } from './shared/modal/confirmation/confirmation.component';
 
@@ -53,7 +52,6 @@ import { ConfirmationComponent } from './shared/modal/confirmation/confirmation.
     CloseIssueComponent,
     AdminComponent,
     EditIssueComponent,
-    ConfirmComponent,
     AnchorDirective,
     ConfirmationComponent,
   ],
