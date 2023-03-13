@@ -70,7 +70,11 @@ export class IssueListComponent implements OnInit {
     }
   }
 
-  handlePageChange(page: number) {
+  handlePageChange(page: number): void {
     this.updatePage(page - 1);
+  }
+
+  onIssueDeleted(): void {
+    this.updatePage(this.issueData.number);
   }
 }

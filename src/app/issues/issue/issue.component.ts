@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/login.service';
 import { Issue } from 'src/app/interfaces/issue';
@@ -14,7 +21,7 @@ import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-moda
 export class IssueComponent implements OnInit {
   @Input() issue!: Issue;
   userId: number = 0;
-
+  @Output() deleted = new EventEmitter<void>();
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
 
@@ -83,7 +90,7 @@ export class IssueComponent implements OnInit {
 
   deleteIssue(): void {
     this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
-      next: () => this.router.navigate(['/issues']),
+      next: () => this.deleted.emit(),
     });
   }
 

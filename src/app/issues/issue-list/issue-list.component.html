@@ -41,7 +41,7 @@
                 }
         "
       >
-        <app-issue [issue]="issue"></app-issue>
+        <app-issue [issue]="issue" (deleted)="onIssueDeleted()"></app-issue>
       </ng-container>
       <pagination-controls
         (pageChange)="handlePageChange($event)"
