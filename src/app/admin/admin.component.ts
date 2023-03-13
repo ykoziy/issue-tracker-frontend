@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../interfaces/user';
 import { UserData } from '../model/userdata';
 import { ProfileService } from '../service/profile.service';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
+import { AnchorDirective } from '../shared/modal/anchor.directive';
 
 @Component({
   selector: 'app-admin',
@@ -11,11 +13,19 @@ import { ProfileService } from '../service/profile.service';
 export class AdminComponent implements OnInit {
   users: User[] = [];
   userData = <UserData>{};
+  @ViewChild(AnchorDirective, { static: true })
+  modalHost!: AnchorDirective;
 
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private confirmationModalService: ConfirmationModalService
+  ) {}
 
   ngOnInit(): void {
     this.initUsers();
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
   }
 
   handlePageChange(page: number) {
@@ -30,7 +40,15 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  onBan(user: User) {
+  async onBan(user: User): Promise<void> {
+    const message = 'Are you sure you want to ban the user?';
+    const result = await this.confirmationModalService.confirm(message);
+    if (result) {
+      this.banUser(user);
+    }
+  }
+
+  banUser(user: User): void {
     this.profileService.banUser(user).subscribe({
       next: () => {
         this.initUsers();
