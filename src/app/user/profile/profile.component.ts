@@ -12,6 +12,7 @@ import { User } from 'src/app/interfaces/user';
 import { ProfileService } from 'src/app/service/profile.service';
 import { AnchorDirective } from 'src/app/shared/modal/anchor.directive';
 import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component';
+import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,11 +21,8 @@ import { ConfirmComponent } from 'src/app/shared/modal/confirm/confirm.component
 })
 export class ProfileComponent implements OnInit {
   profileForm = {} as FormGroup;
-  @ViewChild(AnchorDirective, { static: false })
+  @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-  private cancelSub!: Subscription;
-  private okSub!: Subscription;
-  private message = 'This will update the profile. Are you sure?';
 
   nameMaxLength = 30;
   minLength = 2;
@@ -42,12 +40,16 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private profileService: ProfileService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit(): void {
     this.userId = this.loginService.getUserId();
     this.createProfileForm();
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
     if (this.userId > 0) {
       this.profileService
         .getProfile(this.userId)
@@ -71,12 +73,6 @@ export class ProfileComponent implements OnInit {
   onEdit(): void {
     this.toggleIsEditing();
     this.enableInputs(this.profileForm, true);
-  }
-
-  onSave(): void {
-    if (this.profileForm.valid) {
-      this.showConfirmation();
-    }
   }
 
   private createProfileForm(): void {
@@ -126,24 +122,14 @@ export class ProfileComponent implements OnInit {
     return this.profileForm.controls[name];
   }
 
-  showConfirmation(): void {
-    const confirmRef =
-      this.modalHost.viewContainerRef.createComponent<ConfirmComponent>(
-        ConfirmComponent
-      );
-
-    confirmRef.instance.message = this.message;
-
-    this.cancelSub = confirmRef.instance.cancel.subscribe(() => {
-      this.cancelSub.unsubscribe();
-      confirmRef.destroy();
-    });
-
-    this.okSub = confirmRef.instance.ok.subscribe(() => {
-      this.saveProfile();
-      this.okSub.unsubscribe();
-      confirmRef.destroy();
-    });
+  async onSave(): Promise<void> {
+    if (this.profileForm.valid) {
+      const message = 'This will update the profile. Are you sure?';
+      const result = await this.confirmationModalService.confirm(message);
+      if (result) {
+        this.saveProfile();
+      }
+    }
   }
 
   saveProfile(): void {
