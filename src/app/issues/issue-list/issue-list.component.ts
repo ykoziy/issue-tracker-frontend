@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IssueData } from 'src/app/model/issuedata';
 import { IssueService } from 'src/app/service/issue.service';
+import { LoginService } from 'src/app/auth/login.service';
 
 @Component({
   selector: 'app-issue-list',
@@ -10,18 +11,22 @@ import { IssueService } from 'src/app/service/issue.service';
   styleUrls: ['./issue-list.component.sass'],
 })
 export class IssueListComponent implements OnInit {
-  filterForm = {} as FormGroup;
-  issueData = <IssueData>{};
-  filterPriority = '';
-  filterStatus = '';
+  filterForm: FormGroup = {} as FormGroup;
+  issueData: IssueData = <IssueData>{};
+  filterPriority: string = '';
+  filterStatus: string = '';
+  filterOwnIssues: boolean = false;
+  userId: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
     private issueService: IssueService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
+    this.userId = this.loginService.getUserId();
     this.route.data.subscribe((response: any) => {
       this.issueData = response.issues;
     });
@@ -29,45 +34,30 @@ export class IssueListComponent implements OnInit {
     this.filterForm = this.formBuilder.group({
       issuePriority: [''],
       issueStatus: [''],
+      myIssues: [false],
     });
   }
 
   onSubmit(): void {
     this.filterPriority = this.filterForm.value.issuePriority;
     this.filterStatus = this.filterForm.value.issueStatus;
+    this.filterOwnIssues = this.filterForm.value.myIssues;
     this.updatePage();
   }
 
   updatePage(page?: number) {
-    if (this.filterPriority === '' && this.filterStatus === '') {
-      this.issueService.getIssues(page).subscribe((response: IssueData) => {
+    let queryParams: any = {};
+    if (this.filterOwnIssues === true) {
+      queryParams.creatorId = this.userId;
+    }
+    queryParams.status = this.filterStatus;
+    queryParams.priority = this.filterPriority;
+
+    this.issueService
+      .filterIssues(queryParams, page)
+      .subscribe((response: IssueData) => {
         this.issueData = response;
       });
-    }
-
-    if (this.filterPriority !== '' && this.filterStatus === '') {
-      this.issueService
-        .filterByPriority(this.filterPriority, page)
-        .subscribe((response: IssueData) => {
-          this.issueData = response;
-        });
-    }
-
-    if (this.filterStatus !== '' && this.filterPriority === '') {
-      this.issueService
-        .filterByStatus(this.filterStatus, page)
-        .subscribe((response: IssueData) => {
-          this.issueData = response;
-        });
-    }
-
-    if (this.filterStatus !== '' && this.filterPriority !== '') {
-      this.issueService
-        .filterByStatusAndPriority(this.filterStatus, this.filterPriority, page)
-        .subscribe((response: IssueData) => {
-          this.issueData = response;
-        });
-    }
   }
 
   handlePageChange(page: number): void {

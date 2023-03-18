@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Issue } from '../interfaces/issue';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NewIssue } from '../interfaces/newissue';
 import { CloseIssue } from '../interfaces/closeissue';
 import { IssueData } from '../model/issuedata';
@@ -12,28 +12,19 @@ export class IssueService {
 
   constructor(private http: HttpClient) {}
 
-  private urlParamBuilder(isNew: boolean, page?: number, size?: number) {
-    let params: string = '';
-    if (isNew === true) {
-      params += '?';
-    } else {
-      params += '&';
-    }
-
-    if (page && size) {
-      params += `page=${page}&size=${size}`;
-    } else if (page) {
-      params += `page=${page}`;
-    } else if (size) {
-      params += `size=${size}`;
-    }
-    return params;
-  }
-
   getIssues(page?: number, size?: number): Observable<IssueData> {
     let url = this.configUrl;
-    url += this.urlParamBuilder(true, page, size);
-    return this.http.get<IssueData>(url);
+    let params = new HttpParams();
+    let filterParams: any = { page: page, size: size };
+
+    for (const key in filterParams) {
+      if (filterParams.hasOwnProperty(key)) {
+        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
+          params = params.set(key, filterParams[key]);
+        }
+      }
+    }
+    return this.http.get<IssueData>(url, { params });
   }
 
   getIssue(issueId: number): Observable<Issue> {
@@ -66,38 +57,23 @@ export class IssueService {
     return this.http.delete(url);
   }
 
-  //filtering methods
-
-  filterByPriority(
-    priority: string,
+  filterIssues(
+    queryParams: any,
     page?: number,
     size?: number
   ): Observable<IssueData> {
-    let url = `${this.configUrl}?priority=${priority.toUpperCase()}`;
-    url += this.urlParamBuilder(false, page, size);
-    return this.http.get<IssueData>(url);
-  }
+    let url = `${this.configUrl}/filter`;
+    let params = new HttpParams();
 
-  filterByStatus(
-    status: string,
-    page?: number,
-    size?: number
-  ): Observable<IssueData> {
-    let url = `${this.configUrl}?status=${status.toUpperCase()}`;
-    url += this.urlParamBuilder(false, page, size);
-    return this.http.get<IssueData>(url);
-  }
+    let filterParams = { ...queryParams, page: page, size: size };
 
-  filterByStatusAndPriority(
-    status: string,
-    priority: string,
-    page?: number,
-    size?: number
-  ): Observable<IssueData> {
-    let url = `${
-      this.configUrl
-    }/filter?status=${status.toUpperCase()}&priority=${priority.toUpperCase()}`;
-    url += this.urlParamBuilder(false, page, size);
-    return this.http.get<IssueData>(url);
+    for (const key in filterParams) {
+      if (filterParams.hasOwnProperty(key)) {
+        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
+          params = params.set(key, filterParams[key]);
+        }
+      }
+    }
+    return this.http.get<IssueData>(url, { params });
   }
 }
