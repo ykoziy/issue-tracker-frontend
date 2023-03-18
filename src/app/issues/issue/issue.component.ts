@@ -24,6 +24,7 @@ export class IssueComponent implements OnInit {
   @Output() deleted = new EventEmitter<void>();
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
+  isAdmin: boolean = false;
 
   constructor(
     private router: Router,
@@ -34,6 +35,10 @@ export class IssueComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.loginService.getUserId();
+    const role = this.loginService.getUserRole();
+    if (role === 'ADMIN') {
+      this.isAdmin = true;
+    }
     this.confirmationModalService.setViewContainerRef(
       this.modalHost.viewContainerRef
     );
@@ -67,19 +72,21 @@ export class IssueComponent implements OnInit {
 
   onEditIssue(event: Event): void {
     event.stopPropagation();
-    if (this.issue.creatorId === this.userId) {
+    if (this.issue.creatorId === this.userId || this.isAdmin) {
       this.router.navigate([`/issue/${this.issue.id}/edit`]);
     }
   }
 
   onCloseIssue(event: Event): void {
     event.stopPropagation();
-    this.router.navigate([`/issue/${this.issue.id}/close`]);
+    if (this.issue.creatorId === this.userId || this.isAdmin) {
+      this.router.navigate([`/issue/${this.issue.id}/close`]);
+    }
   }
 
   async onDelete(event: Event): Promise<void> {
     event.stopPropagation();
-    if (this.userId !== 0) {
+    if (this.issue.creatorId === this.userId || this.isAdmin) {
       const message = 'This will delete the issue. Are you sure?';
       const result = await this.confirmationModalService.confirm(message);
       if (result) {
@@ -96,13 +103,5 @@ export class IssueComponent implements OnInit {
 
   isUserIssue(): boolean {
     return this.userId === this.issue.creatorId;
-  }
-
-  isAdmin(): boolean {
-    const role = this.loginService.getUserRole();
-    if (role === 'ADMIN') {
-      return true;
-    }
-    return false;
   }
 }

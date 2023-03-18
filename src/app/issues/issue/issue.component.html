@@ -35,7 +35,7 @@
       </div>
       <div
         class="d-flex gap-1"
-        *ngIf="issue.status !== 'CLOSED' && (isUserIssue() || isAdmin())"
+        *ngIf="issue.status !== 'CLOSED' && (isUserIssue() || isAdmin)"
       >
         <button class="btn btn-primary btn-sm" (click)="onEditIssue($event)">
           Edit
