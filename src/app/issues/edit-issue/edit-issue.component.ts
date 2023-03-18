@@ -13,10 +13,9 @@ import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-moda
   styleUrls: ['./edit-issue.component.sass'],
 })
 export class EditIssueComponent implements OnInit {
-  editIssueForm = {} as FormGroup;
+  editIssueForm: FormGroup;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
-
   issue!: Issue;
 
   constructor(
@@ -26,17 +25,17 @@ export class EditIssueComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private confirmationModalService: ConfirmationModalService
-  ) {}
-
-  ngOnInit(): void {
-    this.route.data.subscribe((response: any) => {
-      this.issue = response.issue;
-    });
-
+  ) {
     this.editIssueForm = this.formBuilder.group({
       issueTitle: ['', [Validators.required, Validators.minLength(5)]],
       issueDescription: ['', [Validators.required]],
       issuePriority: ['', [Validators.required]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.route.data.subscribe((response: any) => {
+      this.issue = response.issue;
     });
 
     this.editIssueForm.patchValue({
@@ -44,6 +43,7 @@ export class EditIssueComponent implements OnInit {
       issueDescription: this.issue.description,
       issuePriority: this.issue.priority,
     });
+
     this.confirmationModalService.setViewContainerRef(
       this.modalHost.viewContainerRef
     );

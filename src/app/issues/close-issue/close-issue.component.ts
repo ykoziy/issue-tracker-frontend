@@ -14,7 +14,7 @@ import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-moda
   styleUrls: ['./close-issue.component.sass'],
 })
 export class CloseIssueComponent implements OnInit {
-  closeIssueForm = {} as FormGroup;
+  closeIssueForm: FormGroup;
   issue!: Issue;
 
   @ViewChild(AnchorDirective, { static: true })
@@ -27,14 +27,15 @@ export class CloseIssueComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private confirmationModalService: ConfirmationModalService
-  ) {}
+  ) {
+    this.closeIssueForm = this.formBuilder.group({
+      resolution: ['', [Validators.required, Validators.minLength(5)]],
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe((response: any) => {
       this.issue = response.issue;
-    });
-    this.closeIssueForm = this.formBuilder.group({
-      resolution: ['', [Validators.required, Validators.minLength(5)]],
     });
     this.confirmationModalService.setViewContainerRef(
       this.modalHost.viewContainerRef

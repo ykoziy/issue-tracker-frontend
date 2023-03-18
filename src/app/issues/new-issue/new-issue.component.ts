@@ -13,7 +13,7 @@ import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-moda
   styleUrls: ['./new-issue.component.sass'],
 })
 export class NewIssueComponent implements OnInit {
-  newIssueForm = {} as FormGroup;
+  newIssueForm: FormGroup;
 
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
@@ -24,14 +24,15 @@ export class NewIssueComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private confirmationModalService: ConfirmationModalService
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.newIssueForm = this.formBuilder.group({
       issueTitle: ['', [Validators.required, Validators.minLength(5)]],
       issueDescription: ['', [Validators.required]],
       issuePriority: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit(): void {
     this.confirmationModalService.setViewContainerRef(
       this.modalHost.viewContainerRef
     );
