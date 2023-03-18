@@ -25,6 +25,7 @@ export class CommentComponent implements OnInit {
   userId: number = 0;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
+  isAdmin: boolean = false;
 
   constructor(
     private commentService: CommentService,
@@ -35,19 +36,23 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.loginService.getUserId();
+    const role = this.loginService.getUserRole();
+    if (role === 'ADMIN') {
+      this.isAdmin = true;
+    }
     this.confirmationModalService.setViewContainerRef(
       this.modalHost.viewContainerRef
     );
   }
 
   onEdit(): void {
-    if (this.comment.authorId === this.userId) {
+    if (this.comment.authorId === this.userId || this.isAdmin) {
       this.router.navigate(['/editComment'], { state: this.comment });
     }
   }
 
   async onDelete(): Promise<void> {
-    if (this.userId !== 0) {
+    if (this.comment.authorId === this.userId || this.isAdmin) {
       const message = 'This will delete the comment. Are you sure?';
       const result = await this.confirmationModalService.confirm(message);
       if (result) {
@@ -65,13 +70,5 @@ export class CommentComponent implements OnInit {
 
   isUserComment(authorId: number): boolean {
     return this.userId === authorId;
-  }
-
-  isAdmin(): boolean {
-    const role = this.loginService.getUserRole();
-    if (role === 'ADMIN') {
-      return true;
-    }
-    return false;
   }
 }

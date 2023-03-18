@@ -21,7 +21,7 @@
   <div class="card-footer">
     <div
       class="btn-toolbar d-flex gap-1"
-      *ngIf="isUserComment(comment.authorId) || isAdmin()"
+      *ngIf="isUserComment(comment.authorId) || isAdmin"
     >
       <button class="btn btn-primary btn-sm" (click)="onEdit()">Edit</button>
       <button class="btn btn-danger btn-sm" (click)="onDelete()">Delete</button>
