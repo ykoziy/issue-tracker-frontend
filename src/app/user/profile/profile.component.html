@@ -16,16 +16,18 @@
     />
   </div>
   <div
-    *ngIf="fm('firstName').touched && fm('firstName').invalid"
+    *ngIf="
+      getFormControl('firstName').touched && getFormControl('firstName').invalid
+    "
     class="alert alert-danger w-50 mx-auto"
   >
-    <div *ngIf="fm('firstName').hasError('required')">
+    <div *ngIf="getFormControl('firstName').hasError('required')">
       First name is required.
     </div>
-    <div *ngIf="fm('firstName').hasError('maxlength')">
+    <div *ngIf="getFormControl('firstName').hasError('maxlength')">
       First name maximum length is {{ nameMaxLength }}.
     </div>
-    <div *ngIf="fm('firstName').hasError('pattern')">
+    <div *ngIf="getFormControl('firstName').hasError('pattern')">
       First name must contain only alphabetic characters.
     </div>
   </div>
@@ -41,16 +43,18 @@
     />
   </div>
   <div
-    *ngIf="fm('lastName').touched && fm('lastName').invalid"
+    *ngIf="
+      getFormControl('lastName').touched && getFormControl('lastName').invalid
+    "
     class="alert alert-danger w-50 mx-auto"
   >
-    <div *ngIf="fm('lastName').hasError('required')">
+    <div *ngIf="getFormControl('lastName').hasError('required')">
       Last name is required.
     </div>
-    <div *ngIf="fm('lastName').hasError('maxlength')">
+    <div *ngIf="getFormControl('lastName').hasError('maxlength')">
       Last name maximum length is {{ nameMaxLength }}.
     </div>
-    <div *ngIf="fm('lastName').hasError('pattern')">
+    <div *ngIf="getFormControl('lastName').hasError('pattern')">
       Last name must contain only alphabetic characters.
     </div>
   </div>
@@ -66,11 +70,15 @@
     />
   </div>
   <div
-    *ngIf="fm('email').touched && fm('email').invalid"
+    *ngIf="getFormControl('email').touched && getFormControl('email').invalid"
     class="alert alert-danger w-50 mx-auto"
   >
-    <div *ngIf="fm('email').hasError('required')">Email is required.</div>
-    <div *ngIf="fm('email').hasError('email')">Must be a valid email.</div>
+    <div *ngIf="getFormControl('email').hasError('required')">
+      Email is required.
+    </div>
+    <div *ngIf="getFormControl('email').hasError('email')">
+      Must be a valid email.
+    </div>
   </div>
 
   <div
@@ -85,14 +93,18 @@
     />
   </div>
   <div
-    *ngIf="fm('userName').touched && fm('userName').invalid"
+    *ngIf="
+      getFormControl('userName').touched && getFormControl('userName').invalid
+    "
     class="alert alert-danger w-50 mx-auto"
   >
-    <div *ngIf="fm('userName').hasError('required')">Username is required.</div>
-    <div *ngIf="fm('userName').hasError('minlength')">
+    <div *ngIf="getFormControl('userName').hasError('required')">
+      Username is required.
+    </div>
+    <div *ngIf="getFormControl('userName').hasError('minlength')">
       Username minimum length is {{ minLength }}.
     </div>
-    <div *ngIf="fm('userName').hasError('pattern')">
+    <div *ngIf="getFormControl('userName').hasError('pattern')">
       Username must contain only alphanumeric characters.
     </div>
   </div>

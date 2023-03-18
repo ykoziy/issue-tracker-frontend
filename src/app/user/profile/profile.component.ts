@@ -18,14 +18,14 @@ import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-moda
   styleUrls: ['./profile.component.sass'],
 })
 export class ProfileComponent implements OnInit {
-  profileForm = {} as FormGroup;
+  profileForm: FormGroup;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
 
   nameMaxLength = 30;
   minLength = 2;
 
-  userProfile: User = <User>{};
+  userProfile: User = {} as User;
   userId: number = 0;
 
   // show error if cant pull up user
@@ -40,40 +40,7 @@ export class ProfileComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private confirmationModalService: ConfirmationModalService
-  ) {}
-
-  ngOnInit(): void {
-    this.userId = this.loginService.getUserId();
-    this.createProfileForm();
-    this.confirmationModalService.setViewContainerRef(
-      this.modalHost.viewContainerRef
-    );
-    if (this.userId > 0) {
-      this.profileService
-        .getProfile(this.userId)
-        .subscribe((userProfileData) => {
-          this.userProfile = userProfileData;
-          this.profileForm.patchValue({
-            firstName: this.userProfile.firstName,
-            lastName: this.userProfile.lastName,
-            userName: this.userProfile.username,
-            email: this.userProfile.email,
-          });
-        });
-      this.userFound = true;
-    }
-  }
-
-  private toggleIsEditing(): void {
-    this.isEditing = !this.isEditing;
-  }
-
-  onEdit(): void {
-    this.toggleIsEditing();
-    this.enableInputs(this.profileForm, true);
-  }
-
-  private createProfileForm(): void {
+  ) {
     this.profileForm = this.formBuilder.group({
       firstName: [
         { value: '', disabled: true },
@@ -106,6 +73,36 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+    this.userId = this.loginService.getUserId();
+    this.confirmationModalService.setViewContainerRef(
+      this.modalHost.viewContainerRef
+    );
+    if (this.userId > 0) {
+      this.profileService
+        .getProfile(this.userId)
+        .subscribe((userProfileData) => {
+          this.userProfile = userProfileData;
+          this.profileForm.patchValue({
+            firstName: this.userProfile.firstName,
+            lastName: this.userProfile.lastName,
+            userName: this.userProfile.username,
+            email: this.userProfile.email,
+          });
+        });
+      this.userFound = true;
+    }
+  }
+
+  private toggleIsEditing(): void {
+    this.isEditing = !this.isEditing;
+  }
+
+  onEdit(): void {
+    this.toggleIsEditing();
+    this.enableInputs(this.profileForm, true);
+  }
+
   enableInputs(group: FormGroup, enabled: boolean): void {
     for (const i in group.controls) {
       if (enabled) {
@@ -116,7 +113,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  fm(name: string): AbstractControl<any, any> {
+  getFormControl(name: string): AbstractControl<any, any> {
     return this.profileForm.controls[name];
   }
 
