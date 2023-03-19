@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { User } from '../interfaces/user';
 import { UserData } from '../model/userdata';
 
@@ -53,5 +53,28 @@ export class ProfileService {
     const headers = { 'content-type': 'application/json' };
     const url = `${this.configUrl}/ban`;
     return this.http.post(url, body, { headers: headers });
+  }
+
+  filterUsers(
+    queryParams: any,
+    page?: number,
+    size?: number
+  ): Observable<UserData> {
+    let url = `${this.configUrl}/filter`;
+    let params = new HttpParams();
+
+    let filterParams = { ...queryParams, page: page, size: size };
+
+    for (const key in filterParams) {
+      if (filterParams.hasOwnProperty(key)) {
+        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
+          params = params.set(key, filterParams[key]);
+        }
+      }
+    }
+    console.log('Filtering users on...');
+    console.log(params.toString());
+    return of();
+    //return this.http.get<UserData>(url, { params });
   }
 }

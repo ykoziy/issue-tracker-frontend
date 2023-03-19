@@ -4,6 +4,7 @@ import { UserData } from '../model/userdata';
 import { ProfileService } from '../service/profile.service';
 import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 import { AnchorDirective } from '../shared/modal/anchor.directive';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -11,16 +12,23 @@ import { AnchorDirective } from '../shared/modal/anchor.directive';
   styleUrls: ['./admin.component.sass'],
 })
 export class AdminComponent implements OnInit {
-  users: User[];
+  filterForm: FormGroup;
+  filterPriority: string = '';
+  filterStatus: string = '';
+  filterOwnIssues: boolean = false;
   userData: UserData = {} as UserData;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
 
   constructor(
     private profileService: ProfileService,
-    private confirmationModalService: ConfirmationModalService
+    private confirmationModalService: ConfirmationModalService,
+    private formBuilder: FormBuilder
   ) {
-    this.users = [];
+    this.filterForm = this.formBuilder.group({
+      accountStatus: [''],
+      myIssues: [false],
+    });
   }
 
   ngOnInit(): void {
@@ -58,14 +66,25 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  setBannedStyle(user: User) {
-    if (!user.enabled) {
-      return 'list-group-item-danger';
-    }
-    return '';
+  onSubmit(): void {
+    this.filterStatus = this.filterForm.value.accountStatus;
+    this.filterOwnIssues = this.filterForm.value.myIssues;
+    this.updatePage();
   }
 
-  // show list of users with date of registration
+  updatePage(page?: number) {
+    let queryParams: any = {};
+
+    queryParams.status = this.filterStatus;
+
+    this.profileService
+      .filterUsers(queryParams, page)
+      .subscribe((response: UserData) => {
+        this.userData = response;
+      });
+  }
+
   // have button to activate account
+  // have button to unlock account
   // change password
 }
