@@ -72,9 +72,6 @@ export class ProfileService {
         }
       }
     }
-    console.log('Filtering users on...');
-    console.log(params.toString());
-    return of();
-    //return this.http.get<UserData>(url, { params });
+    return this.http.get<UserData>(url, { params });
   }
 }

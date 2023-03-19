@@ -11,23 +11,10 @@
             name="accountStatus"
             formControlName="accountStatus"
           >
-            <option value="">Status</option>
-            <option value="banned">Banned</option>
-            <option value="enabled">Enabled</option>
+            <option value="">All</option>
+            <option value="enabled">Banned</option>
+            <option value="locked">Locked</option>
           </select>
-          <div class="d-flex flex-row">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="myIssues"
-                formControlName="myIssues"
-              />
-            </div>
-            <label class="form-check-label" for="flexCheckDefault">
-              Show my Issues
-            </label>
-          </div>
           <button type="submit" class="btn btn-primary btn-md">Filter</button>
         </div>
       </form>

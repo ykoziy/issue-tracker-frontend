@@ -13,9 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class AdminComponent implements OnInit {
   filterForm: FormGroup;
-  filterPriority: string = '';
   filterStatus: string = '';
-  filterOwnIssues: boolean = false;
   userData: UserData = {} as UserData;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
@@ -27,7 +25,6 @@ export class AdminComponent implements OnInit {
   ) {
     this.filterForm = this.formBuilder.group({
       accountStatus: [''],
-      myIssues: [false],
     });
   }
 
@@ -68,14 +65,17 @@ export class AdminComponent implements OnInit {
 
   onSubmit(): void {
     this.filterStatus = this.filterForm.value.accountStatus;
-    this.filterOwnIssues = this.filterForm.value.myIssues;
     this.updatePage();
   }
 
   updatePage(page?: number) {
     let queryParams: any = {};
 
-    queryParams.status = this.filterStatus;
+    if (this.filterStatus === 'enabled') {
+      queryParams.enabled = false;
+    } else if (this.filterStatus === 'locked') {
+      queryParams.locked = true;
+    }
 
     this.profileService
       .filterUsers(queryParams, page)
