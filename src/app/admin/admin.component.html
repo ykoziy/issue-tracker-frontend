@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <ul class="list-group">
         <li
-          class="list-group-item d-flex justify-content-between"
+          class="list-group-item list-item d-flex flex-column"
           *ngFor="
             let user of userData.users
               | paginate
@@ -14,14 +14,10 @@
                     totalItems: userData.totalElements
                   }
           "
-          [ngClass]="setBannedStyle(user)"
         >
-          <p>
-            {{ user.username }} | {{ user.email }} | {{ user.firstName }} |
-            {{ user.lastName }}
-          </p>
+          <app-user-details [user]="user"></app-user-details>
           <button
-            class="btn btn-primary"
+            class="btn btn-danger flex-shrink-0 align-self-end"
             (click)="onBan(user)"
             *ngIf="user.userRole !== 'ADMIN' && user.enabled"
           >

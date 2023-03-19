@@ -32,6 +32,7 @@ import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AnchorDirective } from './shared/modal/anchor.directive';
 import { ConfirmationComponent } from './shared/modal/confirmation/confirmation.component';
+import { UserDetailsComponent } from './admin/user-details/user-details.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { ConfirmationComponent } from './shared/modal/confirmation/confirmation.
     EditIssueComponent,
     AnchorDirective,
     ConfirmationComponent,
+    UserDetailsComponent,
   ],
   imports: [
     BrowserModule,

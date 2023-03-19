@@ -1,0 +1,43 @@
+<div class="card mb-2">
+  <div class="card-header bg-primary text-white" [ngClass]="setBannedStyle()">
+    User: {{ user.username }}
+  </div>
+  <div class="card-body">
+    <div class="row my-3">
+      <div class="col-sm-3"><label class="fw-bold">Status:</label></div>
+      <div class="col-sm-9">
+        <span>{{ getLockedStatus() }}</span>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-sm-3"><label class="fw-bold">Email:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.email }}</span>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-sm-3"><label class="fw-bold">First Name:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.firstName }}</span>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-sm-3"><label class="fw-bold">Last Name:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.lastName }}</span>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-sm-3"><label class="fw-bold">Created On:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.createdOn | date : "medium" }}</span>
+      </div>
+    </div>
+    <div class="row my-3" *ngIf="!user.enabled">
+      <div class="col-sm-3"><label class="fw-bold">Banned On:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.disabledOn | date : "medium" }}</span>
+      </div>
+    </div>
+  </div>
+</div>

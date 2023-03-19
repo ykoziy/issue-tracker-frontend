@@ -136,6 +136,10 @@ export class ProfileComponent implements OnInit {
       userRole: this.userProfile.userRole,
       locked: this.userProfile.locked,
       enabled: this.userProfile.enabled,
+      createdOn: this.userProfile.createdOn,
+      lockedOn: this.userProfile.lockedOn,
+      updatedOn: this.userProfile.updatedOn,
+      disabledOn: this.userProfile.disabledOn,
     };
     this.profileService.updateProfile(updatedUser, this.userId).subscribe({
       next: () => {

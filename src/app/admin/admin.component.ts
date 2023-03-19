@@ -11,15 +11,17 @@ import { AnchorDirective } from '../shared/modal/anchor.directive';
   styleUrls: ['./admin.component.sass'],
 })
 export class AdminComponent implements OnInit {
-  users: User[] = [];
-  userData = <UserData>{};
+  users: User[];
+  userData: UserData = {} as UserData;
   @ViewChild(AnchorDirective, { static: true })
   modalHost!: AnchorDirective;
 
   constructor(
     private profileService: ProfileService,
     private confirmationModalService: ConfirmationModalService
-  ) {}
+  ) {
+    this.users = [];
+  }
 
   ngOnInit(): void {
     this.initUsers();
