@@ -8,8 +8,8 @@
         </div>
         <div>{{ "&bull;" }}</div>
         <div>{{ comment.addedOn | dateDiff }}</div>
-        <div *ngIf="comment.updatedOn">{{ "&bull;" }}</div>
-        <div *ngIf="comment.updatedOn">
+        <div *ngIf="comment.updatedOn !== comment.addedOn">{{ "&bull;" }}</div>
+        <div *ngIf="comment.updatedOn !== comment.addedOn">
           {{ "Edited: " }}{{ comment.updatedOn | dateDiff }}
         </div>
       </div>
