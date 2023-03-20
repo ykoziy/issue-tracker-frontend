@@ -2,32 +2,47 @@
   <div class="row">
     <div class="col-md-12">
       <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
-        <div class="d-flex align-items-center justify-content-center gap-2">
-          <select
-            class="w-25 form-control form-select"
-            aria-label="select priority"
-            id="issuePriority"
-            name="issuePriority"
-            formControlName="issuePriority"
-          >
-            <option value="">Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-          <select
-            class="w-25 form-control form-select"
-            aria-label="select status"
-            id="issueStatus"
-            name="issueStatus"
-            formControlName="issueStatus"
-          >
-            <option value="">Status</option>
-            <option value="open">Open</option>
-            <option value="wip">Wip</option>
-            <option value="closed">Closed</option>
-          </select>
-          <div class="d-flex flex-row">
+        <div class="d-flex flex-column align-items-center gap-2">
+          <div class="d-flex align-items-center justify-content-center gap-2">
+            <label class="form-check-label w-25" for="issueSorting">
+              Sort by date:
+            </label>
+            <select
+              class="w-25 form-control form-select"
+              aria-label="select priority"
+              id="issueSorting"
+              name="issueSorting"
+              formControlName="issueSorting"
+            >
+              <option value="asc">Asc</option>
+              <option value="desc">Desc</option>
+            </select>
+            <select
+              class="w-25 form-control form-select"
+              aria-label="select priority"
+              id="issuePriority"
+              name="issuePriority"
+              formControlName="issuePriority"
+            >
+              <option value="">Priority</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <select
+              class="w-25 form-control form-select"
+              aria-label="select status"
+              id="issueStatus"
+              name="issueStatus"
+              formControlName="issueStatus"
+            >
+              <option value="">Status</option>
+              <option value="open">Open</option>
+              <option value="wip">Wip</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+          <div class="d-flex align-items-center justify-content-center gap-2">
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -35,14 +50,15 @@
                 id="myIssues"
                 formControlName="myIssues"
               />
+              <label class="form-check-label" for="myIssues">
+                Show my Issues
+              </label>
             </div>
-            <label class="form-check-label" for="flexCheckDefault">
-              Show my Issues
-            </label>
+            <button type="submit" class="btn btn-primary btn-md">Filter</button>
           </div>
-          <button type="submit" class="btn btn-primary btn-md">Filter</button>
         </div>
       </form>
+
       <ng-container
         *ngFor="
           let issue of issueData.issues

@@ -15,6 +15,7 @@ export class IssueListComponent implements OnInit {
   issueData: IssueData;
   filterPriority: string = '';
   filterStatus: string = '';
+  sortIssues: string = '';
   filterOwnIssues: boolean = false;
   userId: number = 0;
 
@@ -27,6 +28,7 @@ export class IssueListComponent implements OnInit {
     this.filterForm = this.formBuilder.group({
       issuePriority: [''],
       issueStatus: [''],
+      issueSorting: ['desc'],
       myIssues: [false],
     });
     this.issueData = <IssueData>{};
@@ -43,6 +45,7 @@ export class IssueListComponent implements OnInit {
     this.filterPriority = this.filterForm.value.issuePriority;
     this.filterStatus = this.filterForm.value.issueStatus;
     this.filterOwnIssues = this.filterForm.value.myIssues;
+    this.sortIssues = this.filterForm.value.issueSorting;
     this.updatePage();
   }
 
@@ -53,6 +56,7 @@ export class IssueListComponent implements OnInit {
     }
     queryParams.status = this.filterStatus;
     queryParams.priority = this.filterPriority;
+    queryParams.order = this.sortIssues;
 
     this.issueService
       .filterIssues(queryParams, page)
