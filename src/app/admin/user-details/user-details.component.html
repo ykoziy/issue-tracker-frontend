@@ -39,5 +39,11 @@
         <span>{{ user.disabledOn | date : "medium" }}</span>
       </div>
     </div>
+    <div class="row my-3" *ngIf="user.locked">
+      <div class="col-sm-3"><label class="fw-bold">Locked On:</label></div>
+      <div class="col-sm-9">
+        <span>{{ user.lockedOn | date : "medium" }}</span>
+      </div>
+    </div>
   </div>
 </div>

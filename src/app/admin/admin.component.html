@@ -33,13 +33,23 @@
           "
         >
           <app-user-details [user]="user"></app-user-details>
-          <button
-            class="btn btn-danger flex-shrink-0 align-self-end"
-            (click)="onBan(user)"
-            *ngIf="user.userRole !== 'ADMIN' && user.enabled"
-          >
-            Ban
-          </button>
+          <div class="d-flex gap-1 justify-content-end">
+            <button
+              class="btn btn-success flex-shrink-0 align-self-end"
+              (click)="onUnlock(user)"
+              *ngIf="user.userRole !== 'ADMIN' && user.locked"
+            >
+              Unlock
+            </button>
+
+            <button
+              class="btn btn-danger flex-shrink-0 align-self-end"
+              (click)="onBan(user)"
+              *ngIf="user.userRole !== 'ADMIN' && user.enabled"
+            >
+              Ban
+            </button>
+          </div>
         </li>
       </ul>
       <div class="pagination">

@@ -55,6 +55,13 @@ export class ProfileService {
     return this.http.post(url, body, { headers: headers });
   }
 
+  unlockUser(userDetails: User) {
+    const body = JSON.stringify(userDetails);
+    const headers = { 'content-type': 'application/json' };
+    const url = `${this.configUrl}/unlock`;
+    return this.http.post(url, body, { headers: headers });
+  }
+
   filterUsers(
     queryParams: any,
     page?: number,

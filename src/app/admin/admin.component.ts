@@ -55,8 +55,24 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  async onUnlock(user: User): Promise<void> {
+    const message = 'Are you sure you want to unlock the user?';
+    const result = await this.confirmationModalService.confirm(message);
+    if (result) {
+      this.unlockUser(user);
+    }
+  }
+
   banUser(user: User): void {
     this.profileService.banUser(user).subscribe({
+      next: () => {
+        this.initUsers();
+      },
+    });
+  }
+
+  unlockUser(user: User): void {
+    this.profileService.unlockUser(user).subscribe({
       next: () => {
         this.initUsers();
       },
