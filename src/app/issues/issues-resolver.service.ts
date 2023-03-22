@@ -15,6 +15,6 @@ export class IssuesResolver implements Resolve<IssueData> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): IssueData | Observable<IssueData> | Promise<IssueData> {
-    return this.issueService.getIssues();
+    return this.issueService.getIssues({});
   }
 }

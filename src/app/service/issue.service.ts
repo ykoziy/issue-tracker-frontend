@@ -8,14 +8,19 @@ import { IssueData } from '../model/issuedata';
 
 @Injectable()
 export class IssueService {
-  configUrl: string = 'http://localhost:8080/api/v1/issue';
+  configUrl: string = 'http://localhost:8080/api/v1/issues';
 
   constructor(private http: HttpClient) {}
 
-  getIssues(page?: number, size?: number): Observable<IssueData> {
-    let url = this.configUrl;
+  getIssues(
+    queryParams: any,
+    page?: number,
+    size?: number
+  ): Observable<IssueData> {
+    let url = `${this.configUrl}`;
     let params = new HttpParams();
-    let filterParams: any = { page: page, size: size };
+
+    let filterParams = { ...queryParams, page: page, size: size };
 
     for (const key in filterParams) {
       if (filterParams.hasOwnProperty(key)) {
@@ -38,42 +43,22 @@ export class IssueService {
     return this.http.post(this.configUrl, body, { headers: headers });
   }
 
-  closeIssue(closeIssue: CloseIssue): Observable<any> {
-    const body = JSON.stringify(closeIssue);
-    const url = `${this.configUrl}/close`;
+  closeIssue(issueId: number, resolutionMessage: string): Observable<any> {
+    const body = resolutionMessage;
+    const url = `${this.configUrl}/${issueId}/close`;
     const headers = { 'content-type': 'application/json' };
-    return this.http.post(url, body, { headers: headers });
+    return this.http.put(url, body, { headers: headers });
   }
 
-  editIssue(userId: number, issue: Issue): Observable<any> {
+  editIssue(issue: Issue): Observable<any> {
     const body = JSON.stringify(issue);
     const headers = { 'content-type': 'application/json' };
-    const url = `${this.configUrl}/edit?userId=${userId}`;
-    return this.http.post(url, body, { headers: headers });
+    const url = `${this.configUrl}`;
+    return this.http.put(url, body, { headers: headers });
   }
 
-  deleteIssue(userId: number, issueId: number): Observable<any> {
-    const url = `${this.configUrl}?userId=${userId}&issueId=${issueId}`;
+  deleteIssue(issueId: number): Observable<any> {
+    const url = `${this.configUrl}/${issueId}`;
     return this.http.delete(url);
-  }
-
-  filterIssues(
-    queryParams: any,
-    page?: number,
-    size?: number
-  ): Observable<IssueData> {
-    let url = `${this.configUrl}/filter`;
-    let params = new HttpParams();
-
-    let filterParams = { ...queryParams, page: page, size: size };
-
-    for (const key in filterParams) {
-      if (filterParams.hasOwnProperty(key)) {
-        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
-          params = params.set(key, filterParams[key]);
-        }
-      }
-    }
-    return this.http.get<IssueData>(url, { params });
   }
 }

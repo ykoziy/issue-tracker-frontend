@@ -59,7 +59,7 @@ export class IssueListComponent implements OnInit {
     queryParams.order = this.sortIssues;
 
     this.issueService
-      .filterIssues(queryParams, page)
+      .getIssues(queryParams, page)
       .subscribe((response: IssueData) => {
         this.issueData = response;
         //check if page has no more issues on the current page

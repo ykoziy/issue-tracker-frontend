@@ -96,7 +96,7 @@ export class IssueComponent implements OnInit {
   }
 
   deleteIssue(): void {
-    this.issueService.deleteIssue(this.userId, this.issue.id).subscribe({
+    this.issueService.deleteIssue(this.issue.id).subscribe({
       next: () => this.deleted.emit(),
     });
   }

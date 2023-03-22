@@ -67,7 +67,7 @@ export class EditIssueComponent implements OnInit {
       updatedIssue.description = this.editIssueForm.value.issueDescription;
       updatedIssue.priority = this.editIssueForm.value.issuePriority;
 
-      this.issueService.editIssue(userId, updatedIssue).subscribe({
+      this.issueService.editIssue(updatedIssue).subscribe({
         next: () => {
           this.router.navigate(['/issues']);
         },

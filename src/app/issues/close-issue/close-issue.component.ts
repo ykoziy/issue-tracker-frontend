@@ -55,12 +55,8 @@ export class CloseIssueComponent implements OnInit {
   closeIssue(): void {
     const userId = this.loginService.getUserId();
     if (userId !== 0) {
-      const closeIssue: CloseIssue = {
-        resolution: this.closeIssueForm.value.resolution,
-        userId: userId,
-        issueId: this.issue.id,
-      };
-      this.issueService.closeIssue(closeIssue).subscribe({
+      const resolution: string = this.closeIssueForm.value.resolution;
+      this.issueService.closeIssue(this.issue.id, resolution).subscribe({
         next: () => this.router.navigate(['/issues']),
       });
     }
