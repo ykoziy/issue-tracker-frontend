@@ -8,27 +8,9 @@ import { UserData } from '../model/userdata';
   providedIn: 'root',
 })
 export class ProfileService {
-  configUrl: string = 'http://localhost:8080/api/v1/profile';
+  configUrl: string = 'http://localhost:8080/api/v1/profiles';
 
   constructor(private http: HttpClient) {}
-
-  private urlParamBuilder(isNew: boolean, page?: number, size?: number) {
-    let params: string = '';
-    if (isNew === true) {
-      params += '?';
-    } else {
-      params += '&';
-    }
-
-    if (page && size) {
-      params += `page=${page}&size=${size}`;
-    } else if (page) {
-      params += `page=${page}`;
-    } else if (size) {
-      params += `size=${size}`;
-    }
-    return params;
-  }
 
   getProfile(userId: number): Observable<User> {
     const url = `${this.configUrl}?id=${userId}`;
@@ -39,35 +21,29 @@ export class ProfileService {
     const body = JSON.stringify(userDetails);
     const headers = { 'content-type': 'application/json' };
     const url = `${this.configUrl}?id=${userId}`;
-    return this.http.post(url, body, { headers: headers });
-  }
-
-  getUsers(page?: number, size?: number): Observable<UserData> {
-    let url = `${this.configUrl}/users`;
-    url += this.urlParamBuilder(true, page, size);
-    return this.http.get<UserData>(url);
+    return this.http.put(url, body, { headers: headers });
   }
 
   banUser(userDetails: User) {
     const body = JSON.stringify(userDetails);
     const headers = { 'content-type': 'application/json' };
     const url = `${this.configUrl}/ban`;
-    return this.http.post(url, body, { headers: headers });
+    return this.http.put(url, body, { headers: headers });
   }
 
   unlockUser(userDetails: User) {
     const body = JSON.stringify(userDetails);
     const headers = { 'content-type': 'application/json' };
     const url = `${this.configUrl}/unlock`;
-    return this.http.post(url, body, { headers: headers });
+    return this.http.put(url, body, { headers: headers });
   }
 
-  filterUsers(
+  getUsers(
     queryParams: any,
     page?: number,
     size?: number
   ): Observable<UserData> {
-    let url = `${this.configUrl}/filter`;
+    let url = `${this.configUrl}`;
     let params = new HttpParams();
 
     let filterParams = { ...queryParams, page: page, size: size };

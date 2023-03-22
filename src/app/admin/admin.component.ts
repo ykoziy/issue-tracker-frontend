@@ -36,13 +36,15 @@ export class AdminComponent implements OnInit {
   }
 
   handlePageChange(page: number) {
-    this.profileService.getUsers(page - 1).subscribe((response: UserData) => {
-      this.userData = response;
-    });
+    this.profileService
+      .getUsers({}, page - 1)
+      .subscribe((response: UserData) => {
+        this.userData = response;
+      });
   }
 
   initUsers(): void {
-    this.profileService.getUsers().subscribe((response: UserData) => {
+    this.profileService.getUsers({}).subscribe((response: UserData) => {
       this.userData = response;
     });
   }
@@ -94,7 +96,7 @@ export class AdminComponent implements OnInit {
     }
 
     this.profileService
-      .filterUsers(queryParams, page)
+      .getUsers(queryParams, page)
       .subscribe((response: UserData) => {
         this.userData = response;
       });
