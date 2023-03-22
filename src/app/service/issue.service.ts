@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Issue } from '../interfaces/issue';
 import { Observable, of } from 'rxjs';
 import { NewIssue } from '../interfaces/newissue';
-import { CloseIssue } from '../interfaces/closeissue';
 import { IssueData } from '../model/issuedata';
 
 @Injectable()

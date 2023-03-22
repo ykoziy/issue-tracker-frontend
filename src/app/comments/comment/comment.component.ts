@@ -63,7 +63,7 @@ export class CommentComponent implements OnInit {
 
   deleteComment(): void {
     this.router.navigate(['/issue', this.comment.issueId]);
-    this.commentService.deleteComment(this.userId, this.comment.id).subscribe({
+    this.commentService.deleteComment(this.comment.id).subscribe({
       next: () => this.commentModifiedEvent.emit(),
     });
   }

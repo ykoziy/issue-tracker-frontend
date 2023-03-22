@@ -46,7 +46,7 @@ export class EditCommentComponent implements OnInit {
     updateComment.content = this.editCommentForm.value.userComment;
     const userId = this.loginService.getUserId();
     if (userId != 0) {
-      this.commentService.editComment(userId, updateComment).subscribe({
+      this.commentService.editComment(updateComment).subscribe({
         next: () => {
           this.router.navigate(['/issue', this.comment.issueId]);
         },
