@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Comment } from '../interfaces/comment';
 import { NewComment } from '../interfaces/newcomment';
 import { CommentData } from '../model/commentdata';
+import { HttpUtils } from '../shared/util/http-utils';
 
 @Injectable()
 export class CommentService {
@@ -18,13 +19,10 @@ export class CommentService {
   ): Observable<CommentData> {
     const urlBase: string = 'http://localhost:8080/api/v1/issues';
     let url = `${urlBase}/${issueId}/comments`;
-    let params = new HttpParams();
-    if (page !== undefined) {
-      params = params.set('page', page.toString());
-    }
-    if (size !== undefined) {
-      params = params.set('size', size.toString());
-    }
+    let params: HttpParams = HttpUtils.buildHttpParams({
+      page: page,
+      size: size,
+    });
     return this.http.get<CommentData>(url, { params });
   }
 

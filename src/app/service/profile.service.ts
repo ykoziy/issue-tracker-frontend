@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { User } from '../interfaces/user';
 import { UserData } from '../model/userdata';
+import { HttpUtils } from '../shared/util/http-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,14 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getProfile(userId: number): Observable<User> {
-    const url = `${this.configUrl}?id=${userId}`;
+    const url = `${this.configUrl}/${userId}`;
     return this.http.get<User>(url);
   }
 
   updateProfile(userDetails: User, userId: number): Observable<any> {
     const body = JSON.stringify(userDetails);
     const headers = { 'content-type': 'application/json' };
-    const url = `${this.configUrl}?id=${userId}`;
+    const url = `${this.configUrl}/${userId}`;
     return this.http.put(url, body, { headers: headers });
   }
 
@@ -44,17 +45,8 @@ export class ProfileService {
     size?: number
   ): Observable<UserData> {
     let url = `${this.configUrl}`;
-    let params = new HttpParams();
-
     let filterParams = { ...queryParams, page: page, size: size };
-
-    for (const key in filterParams) {
-      if (filterParams.hasOwnProperty(key)) {
-        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
-          params = params.set(key, filterParams[key]);
-        }
-      }
-    }
+    let params: HttpParams = HttpUtils.buildHttpParams(filterParams);
     return this.http.get<UserData>(url, { params });
   }
 }

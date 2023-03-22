@@ -4,6 +4,7 @@ import { Issue } from '../interfaces/issue';
 import { Observable, of } from 'rxjs';
 import { NewIssue } from '../interfaces/newissue';
 import { IssueData } from '../model/issuedata';
+import { HttpUtils } from '../shared/util/http-utils';
 
 @Injectable()
 export class IssueService {
@@ -17,17 +18,8 @@ export class IssueService {
     size?: number
   ): Observable<IssueData> {
     let url = `${this.configUrl}`;
-    let params = new HttpParams();
-
     let filterParams = { ...queryParams, page: page, size: size };
-
-    for (const key in filterParams) {
-      if (filterParams.hasOwnProperty(key)) {
-        if (filterParams[key] !== '' && filterParams[key] !== undefined) {
-          params = params.set(key, filterParams[key]);
-        }
-      }
-    }
+    let params: HttpParams = HttpUtils.buildHttpParams(filterParams);
     return this.http.get<IssueData>(url, { params });
   }
 
