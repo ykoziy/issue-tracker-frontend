@@ -8,6 +8,8 @@ import { LoginService } from '../auth/login.service';
   styleUrls: ['./navbar.component.sass'],
 })
 export class NavbarComponent implements OnInit {
+  isCollapsed = true;
+
   constructor(private loginService: LoginService, private router: Router) {}
 
   ngOnInit(): void {}
@@ -27,5 +29,9 @@ export class NavbarComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  toggleNavbar(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 }
