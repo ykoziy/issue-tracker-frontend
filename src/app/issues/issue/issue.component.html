@@ -1,8 +1,11 @@
 <ng-template appAnchor></ng-template>
 <div class="card mb-4" (click)="viewDetails()">
-  <div class="card-header text-danger" *ngIf="issue.closedOn">
-    Closed on: {{ issue.closedOn | date : "short" }} by
-    {{ issue.closerUsername }}
+  <div class="card-header" *ngIf="issue.status !== 'CLOSED'">
+    <div class="comment-info d-flex gap-1">
+      <div>{{ issue.creatorUsername }}</div>
+      <div>{{ "&bull;" }}</div>
+      <div>{{ issue.createdOn | dateDiff }}</div>
+    </div>
   </div>
   <div class="card-body">
     <h4 class="card-title">{{ issue.title }}</h4>
@@ -28,10 +31,9 @@
   </div>
   <div class="card-footer">
     <div class="d-flex gap-1 align-items-center justify-content-between">
-      <div class="comment-info d-flex gap-1">
-        <div>{{ issue.creatorUsername }}</div>
-        <div>{{ "&bull;" }}</div>
-        <div>{{ issue.createdOn | dateDiff }}</div>
+      <div class="text-danger" *ngIf="issue.closedOn">
+        Closed by {{ issue.closerUsername }} on
+        {{ issue.closedOn | date : "short" }}
       </div>
       <div
         class="d-flex gap-1"
