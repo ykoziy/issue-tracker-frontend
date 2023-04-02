@@ -33,6 +33,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AnchorDirective } from './shared/modal/anchor.directive';
 import { ConfirmationComponent } from './shared/modal/confirmation/confirmation.component';
 import { UserDetailsComponent } from './admin/user-details/user-details.component';
+import { ProfileMgmtComponent } from './admin/profile-mgmt/profile-mgmt.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { UserDetailsComponent } from './admin/user-details/user-details.componen
     AnchorDirective,
     ConfirmationComponent,
     UserDetailsComponent,
+    ProfileMgmtComponent,
   ],
   imports: [
     BrowserModule,

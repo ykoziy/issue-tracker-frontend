@@ -5,6 +5,7 @@ import { ProfileService } from '../service/profile.service';
 import { ConfirmationModalService } from 'src/app/shared/modal/confirmation-modal.service';
 import { AnchorDirective } from '../shared/modal/anchor.directive';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -21,7 +22,8 @@ export class AdminComponent implements OnInit {
   constructor(
     private profileService: ProfileService,
     private confirmationModalService: ConfirmationModalService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.filterForm = this.formBuilder.group({
       accountStatus: [''],
@@ -86,6 +88,10 @@ export class AdminComponent implements OnInit {
     this.updatePage();
   }
 
+  onEdit(user: User): void {
+    this.router.navigateByUrl('/adminProfileEdit', { state: user });
+  }
+
   updatePage(page?: number) {
     let queryParams: any = {};
 
@@ -103,6 +109,5 @@ export class AdminComponent implements OnInit {
   }
 
   // have button to activate account
-  // have button to unlock account
   // change password
 }

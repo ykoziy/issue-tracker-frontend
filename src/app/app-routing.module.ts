@@ -14,6 +14,7 @@ import { EditCommentComponent } from './comments/edit-comment/edit-comment.compo
 import { CloseIssueComponent } from './issues/close-issue/close-issue.component';
 import { AdminComponent } from './admin/admin.component';
 import { EditIssueComponent } from './issues/edit-issue/edit-issue.component';
+import { ProfileMgmtComponent } from './admin/profile-mgmt/profile-mgmt.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -47,7 +48,12 @@ const routes: Routes = [
   { path: 'newIssue', component: NewIssueComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  {
+    path: 'adminProfileEdit',
+    component: ProfileMgmtComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'newComment',

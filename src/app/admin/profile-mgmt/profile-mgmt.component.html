@@ -1,0 +1,146 @@
+<ng-template appAnchor></ng-template>
+<form [formGroup]="profileForm">
+  <div class="input-group mb-3 mx-auto">
+    <h3 class="mx-auto">Editing {{ user.username }}</h3>
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="userRole" class="form-label" required>Role:</label>
+    <select
+      class="w-25 form-control form-select"
+      aria-label="select role"
+      id="userRole"
+      name="userRole"
+      formControlName="userRole"
+    >
+      <option value="USER">USER</option>
+      <option value="ADMIN">ADMIN</option>
+    </select>
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="firstName" class="form-label" required>First Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      formControlName="firstName"
+    />
+  </div>
+  <div
+    *ngIf="
+      getFormControl('firstName').touched && getFormControl('firstName').invalid
+    "
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="getFormControl('firstName').hasError('required')">
+      First name is required.
+    </div>
+    <div *ngIf="getFormControl('firstName').hasError('maxlength')">
+      First name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="getFormControl('firstName').hasError('pattern')">
+      First name must contain only alphabetic characters.
+    </div>
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="lastName" class="form-label" required>Last Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      formControlName="lastName"
+    />
+  </div>
+  <div
+    *ngIf="
+      getFormControl('lastName').touched && getFormControl('lastName').invalid
+    "
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="getFormControl('lastName').hasError('required')">
+      Last name is required.
+    </div>
+    <div *ngIf="getFormControl('lastName').hasError('maxlength')">
+      Last name maximum length is {{ nameMaxLength }}.
+    </div>
+    <div *ngIf="getFormControl('lastName').hasError('pattern')">
+      Last name must contain only alphabetic characters.
+    </div>
+  </div>
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="email" class="form-label" required>Email:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      formControlName="email"
+    />
+  </div>
+  <div
+    *ngIf="getFormControl('email').touched && getFormControl('email').invalid"
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="getFormControl('email').hasError('required')">
+      Email is required.
+    </div>
+    <div *ngIf="getFormControl('email').hasError('email')">
+      Must be a valid email.
+    </div>
+  </div>
+
+  <div
+    class="input-group input-group-sm gap-3 align-items-center w-50 mb-3 mx-auto"
+  >
+    <label for="userName" class="form-label" required>Username:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="userName"
+      formControlName="userName"
+    />
+  </div>
+  <div
+    *ngIf="
+      getFormControl('userName').touched && getFormControl('userName').invalid
+    "
+    class="alert alert-danger w-50 mx-auto"
+  >
+    <div *ngIf="getFormControl('userName').hasError('required')">
+      Username is required.
+    </div>
+    <div *ngIf="getFormControl('userName').hasError('minlength')">
+      Username minimum length is {{ minLength }}.
+    </div>
+    <div *ngIf="getFormControl('userName').hasError('pattern')">
+      Username must contain only alphanumeric characters.
+    </div>
+  </div>
+
+  <div class="input-group mb-3">
+    <button
+      type="submit"
+      class="btn btn-primary w-50 mx-auto"
+      *ngIf="!isEditing"
+      (click)="onEdit()"
+    >
+      Edit
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary w-50 mx-auto"
+      *ngIf="isEditing"
+      (click)="onSave()"
+    >
+      Save
+    </button>
+  </div>
+</form>

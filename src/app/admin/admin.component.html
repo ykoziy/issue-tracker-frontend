@@ -35,6 +35,14 @@
           <app-user-details [user]="user"></app-user-details>
           <div class="d-flex gap-1 justify-content-end">
             <button
+              class="btn btn-primary flex-shrink-0 align-self-end"
+              (click)="onEdit(user)"
+              *ngIf="user.userRole !== 'ADMIN' && !user.locked"
+            >
+              Edit
+            </button>
+
+            <button
               class="btn btn-success flex-shrink-0 align-self-end"
               (click)="onUnlock(user)"
               *ngIf="user.userRole !== 'ADMIN' && user.locked"
